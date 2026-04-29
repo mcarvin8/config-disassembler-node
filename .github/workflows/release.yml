@@ -134,9 +134,7 @@ jobs:
         run: npm run build:js
 
       - name: Publish to NPM
-        run: npm publish --access public --tag latest
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: NODE_AUTH_TOKEN="" npm publish --access public --tag latest --provenance
   smoke-test:
     needs: release
     if: needs.release-please.outputs.release_created == 'true'

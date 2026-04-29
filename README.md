@@ -3,6 +3,7 @@
 [![NPM](https://img.shields.io/npm/v/config-disassembler.svg?label=config-disassembler)](https://www.npmjs.com/package/config-disassembler)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](https://raw.githubusercontent.com/mcarvin8/config-disassembler-node/main/LICENSE.md)
 [![Downloads/week](https://img.shields.io/npm/dw/config-disassembler.svg)](https://npmjs.org/package/config-disassembler)
+[![codecov](https://codecov.io/gh/mcarvin8/config-disassembler-node/graph/badge.svg?token=ZNPRTPL2LS)](https://codecov.io/gh/mcarvin8/config-disassembler-node)
 
 Node.js bindings for the Rust [`config-disassembler`](https://crates.io/crates/config-disassembler) crate.
 
