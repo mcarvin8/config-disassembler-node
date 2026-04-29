@@ -5,6 +5,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 1.0.0 (2026-04-29)
+
+
+### Features
+
+* init commit ([b3e509b](https://github.com/mcarvin8/config-disassembler-node/commit/b3e509b19dad6c3550541715b66bce6eb7ae470e))
+
 ## [2.5.0](https://github.com/mcarvin8/xml-disassembler-node/compare/v2.4.0...v2.5.0) (2026-04-24)
 
 
