@@ -1,0 +1,19 @@
+name: demo-app
+version: 1.2.3
+active: true
+database:
+  host: localhost
+  port: 5432
+  credentials:
+    user: admin
+    password: secret
+features:
+  darkMode: true
+  betaTesters:
+    - alice
+    - bob
+    - carol
+tags:
+  - alpha
+  - beta
+  - release

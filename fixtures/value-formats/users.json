@@ -1,0 +1,17 @@
+[
+  {
+    "id": "alice",
+    "name": "Alice Anderson",
+    "role": "admin"
+  },
+  {
+    "id": "bob",
+    "name": "Bob Brown",
+    "role": "editor"
+  },
+  {
+    "id": "carol",
+    "name": "Carol Crowe",
+    "role": "viewer"
+  }
+]

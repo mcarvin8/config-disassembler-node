@@ -1,0 +1,38 @@
+# Test the latest config-disassembler published to npm on each OS used in release.
+# Run manually to verify the published package works on Linux, Windows, and macOS.
+name: Smoke Test - Published Plugin
+
+on:
+  workflow_dispatch:
+  workflow_call:
+
+jobs:
+  test-published:
+    name: Test published package (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6.0.2
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+
+      - name: Install latest config-disassembler from NPM
+        shell: bash
+        run: |
+          mkdir -p test-npm-package
+          cd test-npm-package
+          npm init -y
+          npm install config-disassembler
+
+      - name: Run smoke test (published package)
+        shell: bash
+        run: |
+          cp scripts/smoke-test-published.cjs test-npm-package/
+          cd test-npm-package && RUST_LOG=debug node smoke-test-published.cjs

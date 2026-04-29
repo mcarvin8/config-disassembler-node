@@ -1,0 +1,13 @@
+node_modules
+.vscode
+dist
+coverage
+src/**/*.js
+test/**/*.js
+.env
+*.log
+**/*.log
+disassemble.log
+target
+cargo.log
+index.node

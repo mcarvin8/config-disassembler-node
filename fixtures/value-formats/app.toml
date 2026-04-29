@@ -1,0 +1,14 @@
+name = "demo-app"
+version = "1.2.3"
+
+[database]
+host = "localhost"
+port = 5432
+
+[database.credentials]
+user = "admin"
+password = "secret"
+
+[features]
+dark_mode = true
+beta_testers = ["alice", "bob", "carol"]
