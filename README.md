@@ -31,7 +31,6 @@ Disassemble configuration files (XML, JSON, JSON5, JSONC, YAML, TOON, TOML, INI)
 - [Logging](#logging)
 - [Implementation](#implementation)
 - [Use case](#use-case)
-- [Contributing](#contributing)
 - [License](#license)
 
 ---
@@ -354,12 +353,6 @@ For a Salesforce CLI integration example using the XML API, see [sf-decomposer](
 
 ---
 
-## Contributing
-
-See [CONTRIBUTING.md](CONTRIBUTING.md) for code style, PR process, and coverage expectations.
-
----
-
 ## License
 
-This project is based on a template by [Allan Oricil](https://github.com/AllanOricil); the original template code is under the [ISC license](LICENSE.isc). The config-disassembler-node code is under the [MIT license](LICENSE.md).
+[MIT](LICENSE.md)
