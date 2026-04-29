@@ -346,6 +346,16 @@ The Rust crate uses [env_logger](https://docs.rs/env_logger). Set `RUST_LOG` to 
 
 The core logic is implemented in Rust ([config-disassembler](https://crates.io/crates/config-disassembler)) and exposed to Node.js via [Neon](https://neon-bindings.com). Building from source requires Rust and Node.js.
 
+This node plugin ships with native binaries for these platforms and architectures:
+
+| Platform    | Architectures                      |
+| ----------- | ---------------------------------- |
+| **macOS**   | x64 (Intel), arm64 (Apple Silicon) |
+| **Linux**   | x64, arm64, ia32                   |
+| **Windows** | x64                                |
+
+If other platforms or architectures require support, please open an [issue](https://github.com/mcarvin8/config-disassembler-node/issues).
+
 ---
 
 ## Use case
