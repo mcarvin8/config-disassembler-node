@@ -18,8 +18,8 @@ use config_disassembler::disassemble::{disassemble as cd_disassemble, Disassembl
 use config_disassembler::format::Format;
 use config_disassembler::reassemble::{reassemble as cd_reassemble, ReassembleOptions};
 use config_disassembler::xml::{
-    path_segment_from_file_pattern, DecomposeRule, DisassembleXmlFileHandler, MultiLevelRule,
-    ReassembleXmlFileHandler,
+    cli::{parse_multi_level_spec, parse_multi_level_specs},
+    DecomposeRule, DisassembleXmlFileHandler, MultiLevelRule, ReassembleXmlFileHandler,
 };
 use neon::prelude::*;
 
@@ -39,6 +39,44 @@ fn opt_string<'a, C: Context<'a>>(cx: &mut C, obj: &Handle<JsObject>, key: &str)
         .ok()
         .flatten()
         .map(|h| h.value(cx))
+}
+
+/// Pull a string-or-array-of-strings option off an options object. Returns:
+/// * `Ok(Vec<String>)` when the key is absent (empty), is a single string, or is an array of strings.
+/// * `Err(NeonError)` if the value is present but is neither a string nor an array of strings,
+///   or if the array contains non-string elements.
+///
+/// Used to accept overloaded options like `multiLevel: string | string[]` from JS.
+fn opt_string_or_array<'a, C: Context<'a>>(
+    cx: &mut C,
+    obj: &Handle<JsObject>,
+    key: &str,
+) -> NeonResult<Vec<String>> {
+    // Look up the raw value once so we can probe its type without consuming it.
+    let Ok(Some(handle)) = obj.get_opt::<JsValue, C, &str>(cx, key) else {
+        return Ok(Vec::new());
+    };
+    if handle.is_a::<JsUndefined, _>(cx) || handle.is_a::<JsNull, _>(cx) {
+        return Ok(Vec::new());
+    }
+    if let Ok(s) = handle.downcast::<JsString, _>(cx) {
+        return Ok(vec![s.value(cx)]);
+    }
+    if let Ok(arr) = handle.downcast::<JsArray, _>(cx) {
+        let len = arr.len(cx);
+        let mut out = Vec::with_capacity(len as usize);
+        for i in 0..len {
+            let item: Handle<JsValue> = arr.get(cx, i)?;
+            let s = item.downcast::<JsString, _>(cx).or_else(|_| {
+                cx.throw_error::<_, Handle<JsString>>(format!(
+                    "{key}[{i}] must be a string"
+                ))
+            })?;
+            out.push(s.value(cx));
+        }
+        return Ok(out);
+    }
+    cx.throw_error(format!("{key} must be a string or string[]"))
 }
 
 fn opt_bool<'a, C: Context<'a>>(cx: &mut C, obj: &Handle<JsObject>, key: &str) -> bool {
@@ -84,7 +122,10 @@ fn disassemble(mut cx: FunctionContext) -> JsResult<JsUndefined> {
     let ignore_path =
         opt_string(&mut cx, &opts, "ignorePath").unwrap_or_else(|| ".cdignore".to_string());
     let format = opt_string(&mut cx, &opts, "format").unwrap_or_else(|| "xml".to_string());
-    let multi_level_str = opt_string(&mut cx, &opts, "multiLevel");
+    // `multiLevel` accepts either a single colon-delimited rule string or an array of them.
+    // Each entry may itself contain `;`-separated sub-rules (mirroring the CLI), so a single
+    // string with semicolons remains valid.
+    let multi_level_specs = opt_string_or_array(&mut cx, &opts, "multiLevel")?;
     let split_tags_str = opt_string(&mut cx, &opts, "splitTags");
 
     // Parse "tag:mode:field" or "tag:path:mode:field" (comma-separated) into DecomposeRule list
@@ -125,31 +166,26 @@ fn disassemble(mut cx: FunctionContext) -> JsResult<JsUndefined> {
         })
         .unwrap_or_default();
 
-    // Parse "file_pattern:root_to_strip:unique_id_elements" into MultiLevelRule (same as crate CLI).
-    let multi_level_rule = multi_level_str.as_deref().and_then(|spec| {
-        let parts: Vec<&str> = spec.splitn(3, ':').collect();
-        if parts.len() != 3 {
-            return None;
+    // Build a flat list of MultiLevelRule values. Each input string may carry one or more
+    // `;`-separated rules (matching the CLI grammar); array entries are concatenated.
+    let mut multi_level_rules: Vec<MultiLevelRule> = Vec::new();
+    for spec in &multi_level_specs {
+        if spec.contains(';') {
+            multi_level_rules.extend(parse_multi_level_specs(spec));
+        } else if let Some(rule) = parse_multi_level_spec(spec) {
+            multi_level_rules.push(rule);
         }
-        let (file_pattern, root_to_strip, unique_id_elements) = (parts[0], parts[1], parts[2]);
-        if file_pattern.is_empty() || root_to_strip.is_empty() || unique_id_elements.is_empty() {
-            return None;
-        }
-        let path_segment = path_segment_from_file_pattern(file_pattern);
-        Some(MultiLevelRule {
-            file_pattern: file_pattern.to_string(),
-            root_to_strip: root_to_strip.to_string(),
-            unique_id_elements: unique_id_elements.to_string(),
-            path_segment: path_segment.clone(),
-            wrap_root_element: root_to_strip.to_string(),
-            wrap_xmlns: String::new(),
-        })
-    });
+    }
 
     let decompose_rules_ref = if decompose_rules.is_empty() {
         None
     } else {
         Some(decompose_rules.as_slice())
+    };
+    let multi_level_rules_ref = if multi_level_rules.is_empty() {
+        None
+    } else {
+        Some(multi_level_rules.as_slice())
     };
 
     let result = runtime().block_on(async {
@@ -163,7 +199,7 @@ fn disassemble(mut cx: FunctionContext) -> JsResult<JsUndefined> {
                 post_purge,
                 &ignore_path,
                 &format,
-                multi_level_rule.as_ref(),
+                multi_level_rules_ref,
                 decompose_rules_ref,
             )
             .await

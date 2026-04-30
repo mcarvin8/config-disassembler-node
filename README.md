@@ -90,16 +90,16 @@ npm install config-disassembler
 
 ## Supported formats
 
-| Format | Disassemble | Reassemble | Cross-format conversions |
-| ------ | ----------- | ---------- | ------------------------- |
-| XML    | yes         | yes        | XML &harr; XML / JSON / JSON5 / YAML |
-| JSON   | yes         | yes        | within JSON / JSON5 / JSONC / YAML / TOON |
-| JSON5  | yes         | yes        | within JSON / JSON5 / JSONC / YAML / TOON |
+| Format | Disassemble | Reassemble | Cross-format conversions                                                          |
+| ------ | ----------- | ---------- | --------------------------------------------------------------------------------- |
+| XML    | yes         | yes        | XML &harr; XML / JSON / JSON5 / YAML                                              |
+| JSON   | yes         | yes        | within JSON / JSON5 / JSONC / YAML / TOON                                         |
+| JSON5  | yes         | yes        | within JSON / JSON5 / JSONC / YAML / TOON                                         |
 | JSONC  | yes         | yes        | within JSON / JSON5 / JSONC / YAML / TOON (comments preserved on JSONC <-> JSONC) |
-| YAML   | yes         | yes        | within JSON / JSON5 / JSONC / YAML / TOON |
-| TOON   | yes         | yes        | within JSON / JSON5 / JSONC / YAML / TOON |
-| TOML   | yes         | yes        | TOML <-> TOML only |
-| INI    | yes         | yes        | INI <-> INI only |
+| YAML   | yes         | yes        | within JSON / JSON5 / JSONC / YAML / TOON                                         |
+| TOON   | yes         | yes        | within JSON / JSON5 / JSONC / YAML / TOON                                         |
+| TOML   | yes         | yes        | TOML <-> TOML only                                                                |
+| INI    | yes         | yes        | INI <-> INI only                                                                  |
 
 See [TOML and INI isolation](#toml-and-ini-isolation) for the rationale on the same-format-only restriction.
 
@@ -127,17 +127,17 @@ handler.disassemble({
 });
 ```
 
-| Option             | Description                                                                                                                           |
-| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------- |
-| `filePath`         | Path to the XML file or directory to disassemble.                                                                                     |
-| `uniqueIdElements` | Comma-separated element names used to derive filenames for nested elements.                                                           |
-| `multiLevel`       | Optional. Multi-level spec: `file_pattern:root_to_strip:unique_id_elements`. See [Multi-level disassembly](#multi-level-disassembly). |
-| `splitTags`        | Optional. With `strategy: "grouped-by-tag"`: split or group nested tags. See [Split tags](#split-tags-splittags).                      |
-| `prePurge`         | Remove existing disassembly output before running (default: `false`).                                                                 |
-| `postPurge`        | Remove the source XML after disassembly (default: `false`).                                                                           |
-| `ignorePath`       | Path to the ignore file (default: `.cdignore`).                                                                                       |
-| `format`           | Output format: `xml`, `json`, `json5`, `yaml`.                                                                                        |
-| `strategy`         | `unique-id` or `grouped-by-tag`.                                                                                                      |
+| Option             | Description                                                                                                                                                                                                                                                        |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `filePath`         | Path to the XML file or directory to disassemble.                                                                                                                                                                                                                  |
+| `uniqueIdElements` | Comma-separated element names used to derive filenames for nested elements.                                                                                                                                                                                        |
+| `multiLevel`       | Optional. One or more multi-level specs: `file_pattern:root_to_strip:unique_id_elements`. Pass a `string` (single rule) or a `string[]` for several rules; semicolon-separated strings are also accepted. See [Multi-level disassembly](#multi-level-disassembly). |
+| `splitTags`        | Optional. With `strategy: "grouped-by-tag"`: split or group nested tags. See [Split tags](#split-tags-splittags).                                                                                                                                                  |
+| `prePurge`         | Remove existing disassembly output before running (default: `false`).                                                                                                                                                                                              |
+| `postPurge`        | Remove the source XML after disassembly (default: `false`).                                                                                                                                                                                                        |
+| `ignorePath`       | Path to the ignore file (default: `.cdignore`).                                                                                                                                                                                                                    |
+| `format`           | Output format: `xml`, `json`, `json5`, `yaml`.                                                                                                                                                                                                                     |
+| `strategy`         | `unique-id` or `grouped-by-tag`.                                                                                                                                                                                                                                   |
 
 ### Disassembly strategies
 
@@ -208,6 +208,28 @@ A `.multi_level.json` config is written in the disassembly root so reassembly kn
 
 **Caveat:** Multi-level reassembly removes disassembled directories after reassembling each level, even when you do not pass `postPurge`. This is required so the next level can merge the reassembled XML files.
 
+#### Multiple multi-level rules
+
+If a single XML file has more than one deeply-nested repeatable block, pass several specs in one `disassemble` call. Each rule is applied independently and persisted to `.multi_level.json` so reassembly replays them all in order. Use a `string[]` (preferred for clarity) or a single `;`-separated string:
+
+```typescript
+disassemble.disassemble({
+  filePath: "MyType.bigFile-meta.xml",
+  uniqueIdElements: "fullName,name,id",
+  multiLevel: ["sectionA:sectionA:id", "sectionB:sectionB:name"],
+  postPurge: true,
+});
+
+disassemble.disassemble({
+  filePath: "MyType.bigFile-meta.xml",
+  uniqueIdElements: "fullName,name,id",
+  multiLevel: "sectionA:sectionA:id;sectionB:sectionB:name",
+  postPurge: true,
+});
+```
+
+> Sequential `disassemble` calls (one per rule, with `postPurge: false` to preserve prior output) are **not** equivalent — each call rewrites `.multi_level.json` and reorganises the on-disk wrappers, so only the last rule survives. Always pass every rule for a given file in a single call.
+
 ### Reassembling XML
 
 ```typescript
@@ -266,16 +288,16 @@ handler.disassemble({
 });
 ```
 
-| Option         | Description                                                                                                                                                  |
-| -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `input`        | Path to a file or directory to disassemble.                                                                                                                  |
-| `inputFormat`  | Override input format. Defaults to detecting from the file extension (or each file's extension when `input` is a directory).                                  |
-| `outputFormat` | Format used for the split files. Defaults to `inputFormat`. Restricted to the input's compatible family.                                                     |
-| `outputDir`    | Directory to write split files to (single-file input only). Defaults to `<stem>` next to the input. Rejected for directory inputs.                           |
-| `uniqueId`    | For array roots, name files by this field on each element. Falls back to a zero-padded index when missing.                                                    |
-| `prePurge`     | Remove the output directory before writing (default: `false`).                                                                                               |
-| `postPurge`    | Delete the input file (or input directory, when empty after disassembly) after a successful run (default: `false`).                                          |
-| `ignorePath`   | `.gitignore`-style ignore file for directory walks. Defaults to `.cdignore` in the input directory.                                                          |
+| Option         | Description                                                                                                                        |
+| -------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| `input`        | Path to a file or directory to disassemble.                                                                                        |
+| `inputFormat`  | Override input format. Defaults to detecting from the file extension (or each file's extension when `input` is a directory).       |
+| `outputFormat` | Format used for the split files. Defaults to `inputFormat`. Restricted to the input's compatible family.                           |
+| `outputDir`    | Directory to write split files to (single-file input only). Defaults to `<stem>` next to the input. Rejected for directory inputs. |
+| `uniqueId`     | For array roots, name files by this field on each element. Falls back to a zero-padded index when missing.                         |
+| `prePurge`     | Remove the output directory before writing (default: `false`).                                                                     |
+| `postPurge`    | Delete the input file (or input directory, when empty after disassembly) after a successful run (default: `false`).                |
+| `ignorePath`   | `.gitignore`-style ignore file for directory walks. Defaults to `.cdignore` in the input directory.                                |
 
 The handler returns the path of the directory containing the split files (single-file input) or the input directory itself (directory input).
 
@@ -301,12 +323,12 @@ handler.reassemble({
 });
 ```
 
-| Option         | Description                                                                                                            |
-| -------------- | ---------------------------------------------------------------------------------------------------------------------- |
-| `inputDir`     | Directory containing the split files and `.config-disassembler.json` sidecar.                                          |
+| Option         | Description                                                                                                           |
+| -------------- | --------------------------------------------------------------------------------------------------------------------- |
+| `inputDir`     | Directory containing the split files and `.config-disassembler.json` sidecar.                                         |
 | `output`       | Output file path. Defaults to the original source filename recorded in the metadata, or `<dirname>.<ext>` next to it. |
-| `outputFormat` | Format to write the rebuilt file in. Defaults to the source format recorded in the metadata.                           |
-| `postPurge`    | Remove the disassembled directory after a successful reassembly (default: `false`).                                    |
+| `outputFormat` | Format to write the rebuilt file in. Defaults to the source format recorded in the metadata.                          |
+| `postPurge`    | Remove the disassembled directory after a successful reassembly (default: `false`).                                   |
 
 ### TOML and INI isolation
 
