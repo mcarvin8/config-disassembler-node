@@ -5,6 +5,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.1.0](https://github.com/mcarvin8/config-disassembler-node/compare/v1.0.0...v1.1.0) (2026-04-30)
+
+
+### Features
+
+* accept multiLevel as string or string[] ([#2](https://github.com/mcarvin8/config-disassembler-node/issues/2)) ([c9772f3](https://github.com/mcarvin8/config-disassembler-node/commit/c9772f368a708fa0220118209cfe6a661aa82114))
+
 ## 1.0.0 (2026-04-29)
 
 
