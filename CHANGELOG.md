@@ -5,6 +5,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.1.1](https://github.com/mcarvin8/config-disassembler-node/compare/v1.1.0...v1.1.1) (2026-04-30)
+
+
+### Bug Fixes
+
+* reassemble nested multi-level segments without stripping wrapper elements ([#4](https://github.com/mcarvin8/config-disassembler-node/issues/4)) ([31ca8ab](https://github.com/mcarvin8/config-disassembler-node/commit/31ca8abdb05b71975bd69bbb14ec0d5c4409b4e8))
+
 ## [1.1.0](https://github.com/mcarvin8/config-disassembler-node/compare/v1.0.0...v1.1.0) (2026-04-30)
 
 

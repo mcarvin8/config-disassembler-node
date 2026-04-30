@@ -1,6 +1,6 @@
 {
   "name": "config-disassembler",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Disassemble configuration files (XML, JSON, JSON5, JSONC, YAML, TOON, TOML, INI) into smaller, version-control friendly pieces and reassemble them on demand. Node.js bindings for the Rust `config-disassembler` crate.",
   "author": "Matt Carvin",
   "license": "MIT",
