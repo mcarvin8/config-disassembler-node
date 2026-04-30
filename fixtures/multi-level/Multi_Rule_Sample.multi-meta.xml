@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MultiRoot xmlns="http://example.com/multi">
+    <description>two-section sample for multi-rule round-trip</description>
+    <sectionA>
+        <items>
+            <id>a1</id>
+            <label>Alpha One</label>
+        </items>
+        <items>
+            <id>a2</id>
+            <label>Alpha Two</label>
+        </items>
+    </sectionA>
+    <sectionB>
+        <records>
+            <name>Beta_One</name>
+            <value>1</value>
+        </records>
+        <records>
+            <name>Beta_Two</name>
+            <value>2</value>
+        </records>
+    </sectionB>
+</MultiRoot>

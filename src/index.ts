@@ -37,7 +37,15 @@ export class DisassembleXMLFileHandler {
     postPurge?: boolean;
     ignorePath?: string;
     format?: string;
-    multiLevel?: string;
+    /**
+     * Multi-level disassembly rule(s). Each rule has the shape
+     * `file_pattern:root_to_strip:unique_id_elements`. Pass a single string for
+     * one rule, a `;`-separated string for several rules in one spec, or an
+     * array where each entry is one rule (or itself a `;`-separated bundle).
+     * Each rule is persisted to `.multi_level.json` in the disassembly root and
+     * replayed on reassembly.
+     */
+    multiLevel?: string | string[];
     splitTags?: string;
   }): void {
     nativeAddon.disassemble(opts);
