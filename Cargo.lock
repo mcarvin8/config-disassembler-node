@@ -106,9 +106,9 @@ checksum = "1d07550c9036bf2ae0c684c4297d503f838287c83c53686d05370d0e139ae570"
 
 [[package]]
 name = "config-disassembler"
-version = "0.4.2"
+version = "0.4.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c2b2b29f7a760c5b5b04e198cc06e03de0caa11b93ccaba71b510b67004fe0fa"
+checksum = "ffc4f4f4f9a3e1c219c86166a87e33595f4a0679fce5177d96b2c2bbc03601e4"
 dependencies = [
  "anyhow",
  "configparser",
