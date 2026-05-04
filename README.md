@@ -145,7 +145,7 @@ handler.disassemble({
 
 Each nested element is written to its own file, named by a unique identifier (or an 8-character SHA-256 hash if no UID is available). Leaf content stays in a file named after the original XML.
 
-> **Compound keys (`+`)** – Each comma-separated *UID candidate* in the list may be a `+`-joined compound (e.g. `actionName+pageOrSobjectType+formFactor+profile`). A compound matches only when every sub-field is present and non-empty at the same level, in which case the resolved values are joined with `__` to form the filename. Useful for metadata whose natural unique key is multi-field, like Salesforce `<profileActionOverrides>` (`actionName + pageOrSobjectType + formFactor + profile [+ recordType]`); without compounds, every sibling sharing an `actionName` would collapse to one filename. List both wide and narrow forms (e.g. `A+B+C+D, A+B+C, A`) for graceful fallback when items only carry some keys.
+**Compound keys (`+`)** – Each comma-separated *UID candidate* in the list may be a `+`-joined compound (e.g. `actionName+pageOrSobjectType+formFactor+profile`). A compound matches only when every sub-field is present and non-empty at the same level, in which case the resolved values are joined with `__` to form the filename. Useful for metadata whose natural unique key is multi-field, like Salesforce `<profileActionOverrides>` (`actionName + pageOrSobjectType + formFactor + profile [+ recordType]`); without compounds, every sibling sharing an `actionName` would collapse to one filename. List both wide and narrow forms (e.g. `A+B+C+D, A+B+C, A`) for graceful fallback when items only carry some keys.
 
 Best for fine-grained diffs and version control.
 
