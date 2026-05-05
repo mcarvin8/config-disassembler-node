@@ -1,0 +1,25 @@
+README.md
+  605f6b93016e2a74 150-151
+test/sanitize-and-collision.spec.ts
+  605f6b93016e2a74 1-283
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "208d9d8012ed58e1da61522133d8aeb04a90d3f7",
+  "prompts": {
+    "605f6b93016e2a74": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "04055970-e52a-40f0-bd63-cdad11b18062",
+        "model": "auto-high"
+      },
+      "human_author": "Matt Carvin",
+      "messages": [],
+      "total_additions": 285,
+      "total_deletions": 0,
+      "accepted_lines": 285,
+      "overriden_lines": 0
+    }
+  }
+}
