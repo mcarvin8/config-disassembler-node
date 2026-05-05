@@ -147,6 +147,8 @@ Each nested element is written to its own file, named by a unique identifier (or
 
 **Compound keys (`+`)** – Each comma-separated *UID candidate* in the list may be a `+`-joined compound (e.g. `actionName+pageOrSobjectType+formFactor+profile`). A compound matches only when every sub-field is present and non-empty at the same level, in which case the resolved values are joined with `__` to form the filename. Useful for metadata whose natural unique key is multi-field, like Salesforce `<profileActionOverrides>` (`actionName + pageOrSobjectType + formFactor + profile [+ recordType]`); without compounds, every sibling sharing an `actionName` would collapse to one filename. List both wide and narrow forms (e.g. `A+B+C+D, A+B+C, A`) for graceful fallback when items only carry some keys.
 
+**Filename safety** – Resolved unique-id values are sanitized before being used as a path segment: path separators (`/`, `\`), Windows-reserved chars (`:`, `*`, `?`, `"`, `<`, `>`, `|`), and ASCII control bytes are each replaced with `_`; trailing dots and spaces are stripped. So a Salesforce `EntitlementProcess` milestone named `TrustFile Transaction Sync/Import Complete` produces the shard `TrustFile Transaction Sync_Import Complete.milestones-meta.xml` on every platform instead of the `/` being interpreted as a directory separator. After sanitization, any remaining sibling collisions (because `uniqueIdElements` is too narrow, or because sanitization folded distinct values into the same form) are detected automatically: every sibling in the colliding group falls back to a per-element 8-character SHA-256 hash so no row is silently overwritten on disk. Both behaviors require no configuration.
+
 Best for fine-grained diffs and version control.
 
 #### `grouped-by-tag`
