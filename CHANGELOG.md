@@ -5,6 +5,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.1.0](https://github.com/mcarvin8/config-disassembler-node/compare/v2.0.3...v2.1.0) (2026-05-13)
+
+
+### Features
+
+* add Alpine / musl libc support (linux-x64-musl, linux-arm64-musl) ([#25](https://github.com/mcarvin8/config-disassembler-node/issues/25)) ([9f51662](https://github.com/mcarvin8/config-disassembler-node/commit/9f51662e589123df03794e1d79a1e9a967af8e08))
+
 ## [2.0.3](https://github.com/mcarvin8/config-disassembler-node/compare/v2.0.2...v2.0.3) (2026-05-13)
 
 
