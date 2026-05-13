@@ -37,10 +37,9 @@
     "build": "napi build --platform --release",
     "build:debug": "napi build --platform",
     "test": "vitest run",
-    "release": "semantic-release",
     "lint": "eslint .",
     "format": "prettier --write \"**/*.{js,ts}\"",
-    "prepare": "husky install"
+    "prepare": "husky"
   },
   "lint-staged": {
     "**/*": "prettier --write \"**/*.{js,ts}\" --ignore-unknown"
@@ -77,9 +76,6 @@
     "toon",
     "toml",
     "ini",
-    "xml2json",
-    "xml2yaml",
-    "xml2json5",
     "salesforce",
     "rust",
     "napi-rs"
