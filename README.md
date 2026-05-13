@@ -4,9 +4,11 @@
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](https://raw.githubusercontent.com/mcarvin8/config-disassembler-node/main/LICENSE.md)
 [![Downloads/week](https://img.shields.io/npm/dw/config-disassembler.svg)](https://npmjs.org/package/config-disassembler)
 
-Node.js bindings for the Rust [`config-disassembler`](https://crates.io/crates/config-disassembler) crate via [napi-rs](https://napi.rs).
+Node.js bindings for the Rust [`config-disassembler`](https://crates.io/crates/config-disassembler) crate.
 
 Disassemble configuration files (XML, JSON, JSON5, JSONC, YAML, TOON, TOML, INI) into smaller, version-control–friendly pieces — and reassemble them on demand.
+
+> **Native Rust:** All work is done in [`config-disassembler`](https://crates.io/crates/config-disassembler); this package provides Node.js bindings via [napi-rs](https://napi.rs).
 
 ---
 
@@ -373,11 +375,13 @@ Prebuilt native binaries are published as platform-scoped optional dependencies 
 
 This package ships with native binaries for these platforms and architectures:
 
-| Platform    | Architectures                      |
-| ----------- | ---------------------------------- |
-| **macOS**   | x64 (Intel), arm64 (Apple Silicon) |
-| **Linux**   | x64 (gnu), arm64 (gnu)             |
-| **Windows** | x64, arm64, ia32                   |
+| Platform    | Architectures                                              |
+| ----------- | ---------------------------------------------------------- |
+| **macOS**   | x64 (Intel), arm64 (Apple Silicon)                         |
+| **Linux**   | x64 (gnu + musl), arm64 (gnu + musl)                       |
+| **Windows** | x64, arm64, ia32                                           |
+
+The Linux musl builds (`config-disassembler-linux-x64-musl`, `config-disassembler-linux-arm64-musl`) cover Alpine-based images and other musl libc distributions commonly used for slim CI containers.
 
 Adding a new target is as simple as appending its Rust triple to the `napi.targets` array in `package.json` and adding the matching entry to the build matrix in `.github/workflows/release.yml`. If other platforms or architectures require support, please open an [issue](https://github.com/mcarvin8/config-disassembler-node/issues).
 
