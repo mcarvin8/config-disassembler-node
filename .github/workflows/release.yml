@@ -107,6 +107,20 @@ jobs:
           path: ${{ env.APP_NAME }}.*.node
           if-no-files-found: error
 
+      # The napi-generated index.js / index.d.ts loader is identical
+      # across every target (it's a switch-statement loader covering all
+      # configured platforms), so we only need to upload it once. Pick a
+      # fast/reliable host to do it from.
+      - name: Upload JS bindings (loader + types)
+        if: matrix.settings.target == 'x86_64-unknown-linux-gnu'
+        uses: actions/upload-artifact@v7
+        with:
+          name: js-bindings
+          path: |
+            index.js
+            index.d.ts
+          if-no-files-found: error
+
   publish:
     name: Publish
     needs: [release-please, build-natives]
@@ -136,6 +150,13 @@ jobs:
 
       - name: Move native artifacts into platform packages
         run: npx napi artifacts
+
+      - name: Restore JS bindings to repo root for main package publish
+        run: |
+          cp artifacts/js-bindings/index.js ./index.js
+          cp artifacts/js-bindings/index.d.ts ./index.d.ts
+          ls -la index.js index.d.ts
+        shell: bash
 
       - name: List per-platform packages
         run: ls -R ./npm
