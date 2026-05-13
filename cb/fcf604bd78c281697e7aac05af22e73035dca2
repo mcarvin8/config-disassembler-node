@@ -1,0 +1,19 @@
+package.json
+  s_4e652817cec51a::t_3b26c5fe021301 37
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.4",
+  "base_commit_sha": "cbfcf604bd78c281697e7aac05af22e73035dca2",
+  "prompts": {},
+  "sessions": {
+    "s_4e652817cec51a": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "b11c86c6-d0fc-444c-8f88-fbec29e579b7",
+        "model": "auto-high"
+      },
+      "human_author": "Matt Carvin <90224411+mcarvin8@users.noreply.github.com>"
+    }
+  }
+}
