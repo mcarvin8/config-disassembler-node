@@ -3,7 +3,7 @@ import { strictEqual } from "assert";
 import {
   DisassembleXMLFileHandler,
   ReassembleXMLFileHandler,
-} from "../src/index";
+} from "../";
 
 const fixtureDir = "fixtures/split-tags";
 const baselineFile = `${fixtureDir}/HR_Admin.permissionset-meta.xml`;

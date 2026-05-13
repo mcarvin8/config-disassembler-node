@@ -3,7 +3,7 @@ import { resolve } from "path";
 import {
   DisassembleXMLFileHandler,
   ReassembleXMLFileHandler,
-} from "../src/index";
+} from "../";
 import { compareDirectories } from "./helpers/compare";
 const sampleDir: string = "fixtures";
 const mockDir: string = "mock-tag";

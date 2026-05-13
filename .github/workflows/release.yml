@@ -8,7 +8,13 @@ on:
 permissions:
   contents: write
   pull-requests: write
-  id-token: write # Required for OIDC
+  id-token: write # Required for OIDC + npm provenance
+
+env:
+  DEBUG: napi:*
+  APP_NAME: config-disassembler
+  CARGO_INCREMENTAL: "1"
+  MACOSX_DEPLOYMENT_TARGET: "10.13"
 
 jobs:
   test:
@@ -28,35 +34,39 @@ jobs:
           release-type: node
 
   build-natives:
-    name: Build native (${{ matrix.node_platform }})
+    name: Build native (${{ matrix.settings.target }})
     needs: release-please
     if: needs.release-please.outputs.release_created == 'true'
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.settings.host }}
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - target: x86_64-apple-darwin
-            os: macos-latest
-            node_platform: darwin-x64
-          - target: aarch64-apple-darwin
-            os: macos-latest
-            node_platform: darwin-arm64
-          - target: x86_64-unknown-linux-gnu
-            os: ubuntu-latest
-            node_platform: linux-x64
-          - target: x86_64-pc-windows-msvc
-            os: windows-latest
-            node_platform: win32-x64
-          - target: aarch64-unknown-linux-gnu
-            os: ubuntu-latest
-            node_platform: linux-arm64
-          - target: i686-unknown-linux-gnu
-            os: ubuntu-latest
-            node_platform: linux-ia32
-          - target: aarch64-pc-windows-msvc
-            os: windows-latest
-            node_platform: win32-arm64
+        settings:
+          # macOS
+          - host: macos-latest
+            target: x86_64-apple-darwin
+            build: npm run build -- --target x86_64-apple-darwin
+          - host: macos-latest
+            target: aarch64-apple-darwin
+            build: npm run build -- --target aarch64-apple-darwin
+          # Linux glibc (cross-compiled via the napi-rs cross sysroot, so a
+          # single ubuntu-latest runner can build x64 + arm64 reproducibly).
+          - host: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+            build: npm run build -- --target x86_64-unknown-linux-gnu --use-napi-cross
+          - host: ubuntu-latest
+            target: aarch64-unknown-linux-gnu
+            build: npm run build -- --target aarch64-unknown-linux-gnu --use-napi-cross
+          # Windows
+          - host: windows-latest
+            target: x86_64-pc-windows-msvc
+            build: npm run build -- --target x86_64-pc-windows-msvc
+          - host: windows-latest
+            target: aarch64-pc-windows-msvc
+            build: npm run build -- --target aarch64-pc-windows-msvc
+          - host: windows-latest
+            target: i686-pc-windows-msvc
+            build: npm run build -- --target i686-pc-windows-msvc
     steps:
       - name: Checkout
         uses: actions/checkout@v6.0.2
@@ -67,40 +77,38 @@ jobs:
           node-version: 24
           cache: npm
 
-      - name: Install cross-compilation deps (Linux cross only)
-        if: matrix.os == 'ubuntu-latest' && matrix.target != 'x86_64-unknown-linux-gnu'
-        run: |
-          sudo apt-get update
-          if [ "${{ matrix.target }}" = "aarch64-unknown-linux-gnu" ]; then
-            sudo apt-get install -y gcc-aarch64-linux-gnu
-          elif [ "${{ matrix.target }}" = "i686-unknown-linux-gnu" ]; then
-            sudo apt-get install -y gcc-i686-linux-gnu
-          fi
-
       - name: Setup Rust
         uses: dtolnay/rust-toolchain@stable
         with:
-          targets: ${{ matrix.target }}
+          targets: ${{ matrix.settings.target }}
+
+      - name: Cache cargo
+        uses: actions/cache@v5
+        with:
+          path: |
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            ~/.napi-rs
+            target/
+          key: ${{ matrix.settings.target }}-cargo-${{ matrix.settings.host }}
 
       - name: Install Dependencies
         run: npm ci
 
-      - name: Build native addon
-        env:
-          TARGET: ${{ matrix.target }}
-          NODE_PLATFORM_ID: ${{ matrix.node_platform }}
-          CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER: aarch64-linux-gnu-gcc
-          CARGO_TARGET_I686_UNKNOWN_LINUX_GNU_LINKER: i686-linux-gnu-gcc
-        run: node scripts/build-native.js
+      - name: Build
+        run: ${{ matrix.settings.build }}
+        shell: bash
 
       - name: Upload native artifact
         uses: actions/upload-artifact@v7
         with:
-          name: native-${{ matrix.node_platform }}
-          path: dist/native/
+          name: bindings-${{ matrix.settings.target }}
+          path: ${{ env.APP_NAME }}.*.node
+          if-no-files-found: error
 
-  release:
-    name: Release
+  publish:
+    name: Publish
     needs: [release-please, build-natives]
     if: needs.release-please.outputs.release_created == 'true'
     runs-on: ubuntu-latest
@@ -115,31 +123,39 @@ jobs:
           cache: npm
           registry-url: "https://registry.npmjs.org"
 
-      - name: Setup Rust
-        uses: dtolnay/rust-toolchain@stable
-
       - name: Install Dependencies
         run: npm ci
+
+      - name: Create per-platform npm dirs
+        run: npx napi create-npm-dirs
 
       - name: Download all native artifacts
         uses: actions/download-artifact@v8
         with:
-          pattern: native-*
-          path: native-artifacts
-          merge-multiple: true
+          path: artifacts
 
-      - name: Merge natives into dist
-        run: |
-          mkdir -p dist/native
-          cp -r native-artifacts/* dist/native/
+      - name: Move native artifacts into platform packages
+        run: npx napi artifacts
 
-      - name: Build JS (Rollup)
-        run: npm run build:js
+      - name: List per-platform packages
+        run: ls -R ./npm
+        shell: bash
 
-      - name: Publish to NPM
+      - name: Configure npm provenance
+        run: npm config set provenance true
+
+      - name: Publish per-platform packages and update optionalDependencies
+        # NODE_AUTH_TOKEN is intentionally cleared so `npm publish` (invoked
+        # by `napi prepublish` under the hood) authenticates via the OIDC
+        # provenance flow instead of falling back to the runner's default
+        # GITHUB_TOKEN that setup-node may have plumbed in.
+        run: NODE_AUTH_TOKEN="" npx napi prepublish -t npm --no-gh-release
+
+      - name: Publish main package
         run: NODE_AUTH_TOKEN="" npm publish --access public --tag latest --provenance
+
   smoke-test:
-    needs: release
+    needs: publish
     if: needs.release-please.outputs.release_created == 'true'
     uses: ./.github/workflows/smoke-test.yml
     secrets: inherit

@@ -3,7 +3,7 @@ import { promises as fs } from "fs";
 import {
   DisassembleXMLFileHandler,
   ReassembleXMLFileHandler,
-} from "../src/index";
+} from "../";
 import { compareFiles } from "./helpers/compare";
 const sampleDir: string = "fixtures";
 const mockDir: string = "mock2";

@@ -10,4 +10,10 @@ test/**/*.js
 disassemble.log
 target
 cargo.log
-index.node
+
+# napi-rs build outputs
+*.node
+index.js
+index.d.ts
+npm/
+artifacts/
