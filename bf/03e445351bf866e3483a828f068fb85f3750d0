@@ -1,0 +1,19 @@
+.github/workflows/release.yml
+  s_4e652817cec51a::t_0ddff427af6a1b 148-156,159-162
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.4",
+  "base_commit_sha": "bf03e445351bf866e3483a828f068fb85f3750d0",
+  "prompts": {},
+  "sessions": {
+    "s_4e652817cec51a": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "b11c86c6-d0fc-444c-8f88-fbec29e579b7",
+        "model": "auto-high"
+      },
+      "human_author": "Matt Carvin <90224411+mcarvin8@users.noreply.github.com>"
+    }
+  }
+}
