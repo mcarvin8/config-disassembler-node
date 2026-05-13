@@ -5,6 +5,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.5.0](https://github.com/mcarvin8/config-disassembler-node/compare/v1.4.0...v1.5.0) (2026-05-13)
+
+
+### Features
+
+* add native binary support for win32-arm64 ([#17](https://github.com/mcarvin8/config-disassembler-node/issues/17)) ([97efd0f](https://github.com/mcarvin8/config-disassembler-node/commit/97efd0f47fec548da551efd1df6b6afe97825416))
+
 ## [1.4.0](https://github.com/mcarvin8/config-disassembler-node/compare/v1.3.0...v1.4.0) (2026-05-08)
 
 
