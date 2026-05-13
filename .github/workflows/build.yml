@@ -52,11 +52,3 @@ jobs:
 
       - name: Test
         run: npm test
-
-      - name: Upload coverage
-        if: runner.os == 'Linux'
-        uses: codecov/codecov-action@v6
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          files: coverage/lcov.info
-          fail_ci_if_error: true
