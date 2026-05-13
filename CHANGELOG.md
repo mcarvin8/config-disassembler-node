@@ -5,6 +5,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.1](https://github.com/mcarvin8/config-disassembler-node/compare/v2.0.0...v2.0.1) (2026-05-13)
+
+
+### Bug Fixes
+
+* **release:** use NPM_TOKEN to bootstrap per-platform package publish ([bf03e44](https://github.com/mcarvin8/config-disassembler-node/commit/bf03e445351bf866e3483a828f068fb85f3750d0))
+
 ## [2.0.0](https://github.com/mcarvin8/config-disassembler-node/compare/v1.5.0...v2.0.0) (2026-05-13)
 
 
