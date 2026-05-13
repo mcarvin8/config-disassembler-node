@@ -1,0 +1,25 @@
+Cargo.toml
+  605f6b93016e2a74 14
+test/dotted-fullname.spec.ts
+  605f6b93016e2a74 1-138
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "c5a5928053a25973f90c6cf26f7d527e17f2ed8e",
+  "prompts": {
+    "605f6b93016e2a74": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "04055970-e52a-40f0-bd63-cdad11b18062",
+        "model": "auto-high"
+      },
+      "human_author": "Matt Carvin",
+      "messages": [],
+      "total_additions": 139,
+      "total_deletions": 1,
+      "accepted_lines": 139,
+      "overriden_lines": 0
+    }
+  }
+}

@@ -1,0 +1,25 @@
+test/compound-unique-id.spec.ts
+  605f6b93016e2a74 1-196
+Cargo.toml
+  605f6b93016e2a74 14
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "8b496fce4a22f4a75145e01a0a3ed8129ca38c31",
+  "prompts": {
+    "605f6b93016e2a74": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "04055970-e52a-40f0-bd63-cdad11b18062",
+        "model": "auto-high"
+      },
+      "human_author": "Matt Carvin",
+      "messages": [],
+      "total_additions": 197,
+      "total_deletions": 1,
+      "accepted_lines": 197,
+      "overriden_lines": 0
+    }
+  }
+}
