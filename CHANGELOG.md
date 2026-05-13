@@ -5,6 +5,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0](https://github.com/mcarvin8/config-disassembler-node/compare/v1.5.0...v2.0.0) (2026-05-13)
+
+
+### ⚠ BREAKING CHANGES
+
+* switch native bindings from Neon to napi-rs ([#19](https://github.com/mcarvin8/config-disassembler-node/issues/19))
+
+### Features
+
+* switch native bindings from Neon to napi-rs ([#19](https://github.com/mcarvin8/config-disassembler-node/issues/19)) ([a7233cb](https://github.com/mcarvin8/config-disassembler-node/commit/a7233cbc4a752d1dfcb976d3e377057362c8ce8c))
+
 ## [1.5.0](https://github.com/mcarvin8/config-disassembler-node/compare/v1.4.0...v1.5.0) (2026-05-13)
 
 
