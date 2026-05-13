@@ -378,7 +378,7 @@ This node plugin ships with native binaries for these platforms and architecture
 | ----------- | ---------------------------------- |
 | **macOS**   | x64 (Intel), arm64 (Apple Silicon) |
 | **Linux**   | x64, arm64, ia32                   |
-| **Windows** | x64                                |
+| **Windows** | x64, arm64                         |
 
 If other platforms or architectures require support, please open an [issue](https://github.com/mcarvin8/config-disassembler-node/issues).
 

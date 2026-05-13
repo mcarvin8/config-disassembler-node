@@ -54,6 +54,9 @@ jobs:
           - target: i686-unknown-linux-gnu
             os: ubuntu-latest
             node_platform: linux-ia32
+          - target: aarch64-pc-windows-msvc
+            os: windows-latest
+            node_platform: win32-arm64
     steps:
       - name: Checkout
         uses: actions/checkout@v6.0.2
