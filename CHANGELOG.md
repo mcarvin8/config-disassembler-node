@@ -5,6 +5,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.3](https://github.com/mcarvin8/config-disassembler-node/compare/v2.0.2...v2.0.3) (2026-05-13)
+
+
+### Bug Fixes
+
+* **release:** trigger release for trusted publishing ([707af83](https://github.com/mcarvin8/config-disassembler-node/commit/707af83c41791e4c41b752a1e3bdf01d0e0f149f))
+
 ## [2.0.2](https://github.com/mcarvin8/config-disassembler-node/compare/v2.0.1...v2.0.2) (2026-05-13)
 
 
