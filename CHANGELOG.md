@@ -5,6 +5,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.2](https://github.com/mcarvin8/config-disassembler-node/compare/v2.0.1...v2.0.2) (2026-05-13)
+
+
+### Bug Fixes
+
+* **release:** publish napi-generated index.js / index.d.ts with main package ([ae20899](https://github.com/mcarvin8/config-disassembler-node/commit/ae20899097f36edf3c0d858b9abad271b75a451e))
+
 ## [2.0.1](https://github.com/mcarvin8/config-disassembler-node/compare/v2.0.0...v2.0.1) (2026-05-13)
 
 
