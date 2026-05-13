@@ -8,12 +8,14 @@ test
 .gitignore
 .releaserc.json
 vitest.config.ts
-rollup.config.mjs
 tsconfig.json
 fixtures
 scripts
+build.rs
 Cargo.toml
 Cargo.lock
 cargo.log
 target
 .cdignore
+npm
+artifacts

@@ -5,7 +5,7 @@ import { join } from "path";
 import {
   DisassembleXMLFileHandler,
   ReassembleXMLFileHandler,
-} from "../src/index";
+} from "../";
 
 // Regression spec for the two upstream Rust fixes shipped in
 // `config-disassembler` 0.5.0:

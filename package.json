@@ -4,36 +4,40 @@
   "description": "Disassemble configuration files (XML, JSON, JSON5, JSONC, YAML, TOON, TOML, INI) into smaller, version-control friendly pieces and reassemble them on demand. Node.js bindings for the Rust `config-disassembler` crate.",
   "author": "Matt Carvin",
   "license": "MIT",
-  "main": "dist/index.cjs",
-  "module": "dist/index.mjs",
-  "types": "dist/typings/index.d.ts",
-  "exports": {
-    ".": {
-      "types": "./dist/typings/index.d.ts",
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.cjs"
-    }
-  },
+  "main": "index.js",
+  "types": "index.d.ts",
   "engines": {
     "node": ">=20"
   },
   "files": [
-    "dist",
+    "index.js",
+    "index.d.ts",
     "CHANGELOG.md"
   ],
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "napi": {
+    "binaryName": "config-disassembler",
+    "targets": [
+      "x86_64-apple-darwin",
+      "aarch64-apple-darwin",
+      "x86_64-unknown-linux-gnu",
+      "aarch64-unknown-linux-gnu",
+      "x86_64-pc-windows-msvc",
+      "aarch64-pc-windows-msvc",
+      "i686-pc-windows-msvc"
+    ]
   },
   "scripts": {
-    "build": "npm run build:crate && npm run build:js",
-    "build:js": "npx rollup -c",
-    "build:crate": "node scripts/build-native.js",
-    "start": "node dist/index.cjs",
+    "artifacts": "napi artifacts",
+    "build": "napi build --platform --release",
+    "build:debug": "napi build --platform",
     "test": "vitest run --coverage",
     "release": "semantic-release",
     "lint": "eslint .",
     "format": "prettier --write \"**/*.{js,ts}\"",
-    "prepack": "npm run build",
     "prepare": "husky install"
   },
   "lint-staged": {
@@ -41,22 +45,16 @@
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^20.5.0",
-    "@rollup/plugin-terser": "^1.0.0",
-    "@rollup/plugin-typescript": "^12.1.4",
+    "@napi-rs/cli": "^3.6.2",
     "@types/node": "^25.5.0",
     "@vitest/coverage-v8": "^4.1.5",
-    "cargo-cp-artifact": "^0.1.9",
     "eslint": "^10.0.3",
     "eslint-config-prettier": "^10.1.2",
     "husky": "^9.1.7",
     "lint-staged": "^16.3.3",
     "prettier": "3.8.1",
-    "rollup": "^4.59.0",
     "typescript": "^5.9.3",
     "vitest": "^4.1.5"
-  },
-  "dependencies": {
-    "tslib": "^2.6.2"
   },
   "repository": {
     "type": "git",
@@ -83,6 +81,6 @@
     "xml2json5",
     "salesforce",
     "rust",
-    "neon"
+    "napi-rs"
   ]
 }

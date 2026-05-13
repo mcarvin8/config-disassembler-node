@@ -3,7 +3,7 @@ import { strictEqual } from "assert";
 import {
   DisassembleXMLFileHandler,
   ReassembleXMLFileHandler,
-} from "../src/index";
+} from "../";
 
 const fixtureDir = "fixtures/multi-level";
 const baselineFile = `${fixtureDir}/Cloud_Kicks_Inner_Circle.loyaltyProgramSetup-meta.xml`;

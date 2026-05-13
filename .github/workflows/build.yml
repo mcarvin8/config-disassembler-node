@@ -9,11 +9,15 @@ on:
 permissions:
   contents: read
 
+env:
+  DEBUG: napi:*
+
 jobs:
   build:
-    name: Build
+    name: Build (${{ matrix.os }})
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
 
@@ -30,10 +34,20 @@ jobs:
       - name: Setup Rust
         uses: dtolnay/rust-toolchain@stable
 
+      - name: Cache cargo
+        uses: actions/cache@v5
+        with:
+          path: |
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
+          key: ${{ runner.os }}-cargo-build
+
       - name: Install Dependencies
         run: npm ci
 
-      - name: Build
+      - name: Build (host target)
         run: npm run build
 
       - name: Test

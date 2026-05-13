@@ -3,7 +3,7 @@ import { strictEqual, ok } from "assert";
 import {
   DisassembleXMLFileHandler,
   ReassembleXMLFileHandler,
-} from "../src/index";
+} from "../";
 
 // Multi-rule disassembly is tested independently from the loyalty-program fixture
 // because the loyalty fixture only exercises a single nested-array section. The

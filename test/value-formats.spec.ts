@@ -5,7 +5,7 @@ import { join } from "path";
 import {
   DisassembleConfigFileHandler,
   ReassembleConfigFileHandler,
-} from "../src/index";
+} from "../";
 
 const sampleDir = "fixtures/value-formats";
 const mockDir = "mock-value-formats";

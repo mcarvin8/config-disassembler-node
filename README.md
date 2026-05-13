@@ -9,7 +9,7 @@ Node.js bindings for the Rust [`config-disassembler`](https://crates.io/crates/c
 
 Disassemble configuration files (XML, JSON, JSON5, JSONC, YAML, TOON, TOML, INI) into smaller, version-control–friendly pieces — and reassemble them on demand.
 
-> **Native Rust:** All work is done in [`config-disassembler`](https://crates.io/crates/config-disassembler); this package provides Node.js bindings via [Neon](https://neon-bindings.com).
+> **Native Rust:** All work is done in [`config-disassembler`](https://crates.io/crates/config-disassembler); this package provides Node.js bindings via [napi-rs](https://napi.rs).
 
 ---
 
@@ -370,17 +370,19 @@ The Rust crate uses [env_logger](https://docs.rs/env_logger). Set `RUST_LOG` to 
 
 ## Implementation
 
-The core logic is implemented in Rust ([config-disassembler](https://crates.io/crates/config-disassembler)) and exposed to Node.js via [Neon](https://neon-bindings.com). Building from source requires Rust and Node.js.
+The core logic is implemented in Rust ([config-disassembler](https://crates.io/crates/config-disassembler)) and exposed to Node.js via [napi-rs](https://napi.rs). Building from source requires Rust and Node.js.
 
-This node plugin ships with native binaries for these platforms and architectures:
+Prebuilt native binaries are published as platform-scoped optional dependencies (e.g. `config-disassembler-darwin-arm64`, `config-disassembler-linux-x64-gnu`); npm/yarn/pnpm will install only the one matching the consumer's `os`/`cpu`/`libc`.
+
+This package ships with native binaries for these platforms and architectures:
 
 | Platform    | Architectures                      |
 | ----------- | ---------------------------------- |
 | **macOS**   | x64 (Intel), arm64 (Apple Silicon) |
-| **Linux**   | x64, arm64, ia32                   |
-| **Windows** | x64, arm64                         |
+| **Linux**   | x64 (gnu), arm64 (gnu)             |
+| **Windows** | x64, arm64, ia32                   |
 
-If other platforms or architectures require support, please open an [issue](https://github.com/mcarvin8/config-disassembler-node/issues).
+Adding a new target is as simple as appending its Rust triple to the `napi.targets` array in `package.json` and adding the matching entry to the build matrix in `.github/workflows/release.yml`. If other platforms or architectures require support, please open an [issue](https://github.com/mcarvin8/config-disassembler-node/issues).
 
 ---
 
