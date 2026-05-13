@@ -166,21 +166,16 @@ jobs:
         run: npm config set provenance true
 
       - name: Publish per-platform packages and update optionalDependencies
-        # The seven per-platform package names are net-new and have no
-        # npm trusted-publisher configured yet (npm requires the package
-        # to exist before trusted publishing can be set up). Bootstrap
-        # via NPM_TOKEN; once each platform package exists and trusted
-        # publishing is configured for it on npmjs.com, this can revert
-        # to `NODE_AUTH_TOKEN=""` to match the main publish below.
-        run: npx napi prepublish -t npm --no-gh-release
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      - name: Publish main package
-        # `config-disassembler` already has npm trusted publishing set
-        # up, so OIDC alone authenticates and NODE_AUTH_TOKEN is
+        # All seven per-platform packages now have npm trusted publishing
+        # configured, so OIDC alone authenticates and NODE_AUTH_TOKEN is
         # cleared to avoid setup-node's default GITHUB_TOKEN leaking
         # in and breaking the provenance flow.
+        run: NODE_AUTH_TOKEN="" npx napi prepublish -t npm --no-gh-release
+
+      - name: Publish main package
+        # Same trusted-publishing pattern as the per-platform packages
+        # above; OIDC authenticates, NODE_AUTH_TOKEN is intentionally
+        # cleared.
         run: NODE_AUTH_TOKEN="" npm publish --access public --tag latest --provenance
 
   smoke-test:
