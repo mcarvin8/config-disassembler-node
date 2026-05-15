@@ -4,11 +4,9 @@
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](https://raw.githubusercontent.com/mcarvin8/config-disassembler-node/main/LICENSE.md)
 [![Downloads/week](https://img.shields.io/npm/dw/config-disassembler.svg)](https://npmjs.org/package/config-disassembler)
 
-Node.js bindings for the Rust [`config-disassembler`](https://crates.io/crates/config-disassembler) crate.
+Node.js bindings for the Rust [`config-disassembler`](https://crates.io/crates/config-disassembler) crate — native Rust implementation exposed to Node.js via [napi-rs](https://napi.rs).
 
 Disassemble configuration files (XML, JSON, JSON5, JSONC, YAML, TOON, TOML, INI) into smaller, version-control–friendly pieces — and reassemble them on demand.
-
-> **Native Rust:** All work is done in [`config-disassembler`](https://crates.io/crates/config-disassembler); this package provides Node.js bindings via [napi-rs](https://napi.rs).
 
 ---
 
