@@ -15,12 +15,14 @@ The Node bindings closely mirror the Rust crate APIs and behavior. For complete 
 ## Install
 
 ```bash
-npm install config-disassembler@latest
+npm install config-disassembler
 ```
 
 ---
 
-## XML Example
+## XML API Examples
+
+> Use this to disassemble a large XML into smaller files (XML, JSON, JSON5, YAML) and reassemble the XML.
 
 ```ts
 import {
@@ -58,7 +60,9 @@ reassemble.reassemble({
 
 ---
 
-## JSON / YAML / TOML Example
+## Value-Format API Examples
+
+> Use this for JSON, JSON5, JSONC, YAML, TOML, and INI configs.
 
 ```ts
 import {
@@ -87,19 +91,6 @@ reassemble.reassemble({
 
 ---
 
-## TypeScript
-
-Type definitions are included with the package.
-
-```ts
-import type {
-  ConfigDisassembleOptions,
-  ConfigReassembleOptions,
-} from "config-disassembler";
-```
-
----
-
 ## Supported Platforms
 
 This package ships with prebuilt native binaries as platform-specific optional npm packages — your package manager installs only the one matching your `os` / `cpu` / `libc`:
@@ -111,6 +102,12 @@ This package ships with prebuilt native binaries as platform-specific optional n
 | **Windows** | x64, arm64, ia32                     |
 
 If your platform or architecture isn't listed, please open an [issue](https://github.com/mcarvin8/config-disassembler-node/issues).
+
+---
+
+## Use Case
+
+For a use-case using the XML API, see sf-decomposer.
 
 ---
 
