@@ -96,7 +96,7 @@ import type {
 
 ## Supported Platforms
 
-Prebuilt native binaries, via napi-rs, are published for supported platforms.
+This package ships with prebuilt native binaries as platform-specific optional npm packages — your package manager installs only the one matching your `os` / `cpu` / `libc`:
 
 | Platform    | Architectures                        |
 | ----------- | ------------------------------------ |
