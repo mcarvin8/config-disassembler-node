@@ -8,9 +8,7 @@ Node.js bindings for the Rust [`config-disassembler`](https://crates.io/crates/c
 
 Use it to disassemble large configuration files into smaller, version-control–friendly files and reassemble them later.
 
-The Node bindings closely mirror the Rust crate APIs and behavior.
-
-For complete documentation and behavior details, see the Rust crate [documentation](https://github.com/mcarvin8/config-disassembler).
+The Node bindings closely mirror the Rust crate APIs and behavior. For complete documentation and behavior details, see the Rust crate [documentation](https://github.com/mcarvin8/config-disassembler).
 
 ---
 
@@ -33,6 +31,7 @@ import {
 // Split XML into smaller files
 const disassemble = new DisassembleXMLFileHandler();
 
+// Disassemble using unique-ID strategy
 disassemble.disassemble({
   filePath: "My.permissionset-meta.xml",
   uniqueIdElements:
@@ -41,12 +40,19 @@ disassemble.disassemble({
   format: "json",
 });
 
-// Rebuild XML from split files
+// Or, disassemble using grouped-by-tag strategy
+disassemble.disassemble({
+  filePath: "My.permissionset-meta.xml",
+  strategy: "grouped-by-tag",
+  format: "json",
+});
+
+// Rebuild XML from a disassembled file directory
 const reassemble = new ReassembleXMLFileHandler();
 
 reassemble.reassemble({
-  filePath: "My",
-  fileExtension: "permissionset-meta.xml",
+  filePath: "My", // must be a folder for reassembly
+  fileExtension: "permissionset-meta.xml", // set explicit file extension (default: `.xml`)
 });
 ```
 
@@ -103,6 +109,8 @@ This package ships with prebuilt native binaries as platform-specific optional n
 | **macOS**   | x64 (Intel), arm64 (Apple Silicon)   |
 | **Linux**   | x64 (gnu + musl), arm64 (gnu + musl) |
 | **Windows** | x64, arm64, ia32                     |
+
+If your platform or architecture isn't listed, please open an issue.
 
 ---
 
