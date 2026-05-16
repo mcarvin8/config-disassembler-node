@@ -110,7 +110,7 @@ This package ships with prebuilt native binaries as platform-specific optional n
 | **Linux**   | x64 (gnu + musl), arm64 (gnu + musl) |
 | **Windows** | x64, arm64, ia32                     |
 
-If your platform or architecture isn't listed, please open an issue.
+If your platform or architecture isn't listed, please open an [issue](https://github.com/mcarvin8/config-disassembler-node/issues).
 
 ---
 
