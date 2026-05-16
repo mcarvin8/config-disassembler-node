@@ -107,7 +107,7 @@ If your platform or architecture isn't listed, please open an [issue](https://gi
 
 ## Use Case
 
-For a use-case using the XML API, see sf-decomposer.
+For a use-case using the XML API, see [sf-decomposer](https://github.com/mcarvin8/sf-decomposer).
 
 ---
 
