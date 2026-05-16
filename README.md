@@ -1,4 +1,4 @@
-# config-disassembler
+# config-disassembler-node
 
 [![NPM](https://img.shields.io/npm/v/config-disassembler.svg?label=config-disassembler)](https://www.npmjs.com/package/config-disassembler)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](https://raw.githubusercontent.com/mcarvin8/config-disassembler-node/main/LICENSE.md)
@@ -10,17 +10,7 @@ Use it to disassemble large configuration files into smaller, version-control–
 
 The Node bindings closely mirror the Rust crate APIs and behavior.
 
-For complete documentation and behavior details, including:
-- supported formats
-- XML strategies
-- parser behavior
-- metadata files
-- ignore rules
-- logging
-- CLI usage
-- format conversion details
-
-See the Rust crate [documentation](https://github.com/mcarvin8/config-disassembler).
+For complete documentation and behavior details, see the Rust crate [documentation](https://github.com/mcarvin8/config-disassembler).
 
 ---
 
