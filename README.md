@@ -94,11 +94,15 @@ import type {
 
 ---
 
-## Runtime Notes
+## Supported Platforms
 
-- Prebuilt native binaries are published for supported platforms.
-- Building from source requires Rust and Node.js.
-- All handler methods are currently synchronous.
+Prebuilt native binaries, via napi-rs, are published for supported platforms.
+
+| Platform    | Architectures                        |
+| ----------- | ------------------------------------ |
+| **macOS**   | x64 (Intel), arm64 (Apple Silicon)   |
+| **Linux**   | x64 (gnu + musl), arm64 (gnu + musl) |
+| **Windows** | x64, arm64, ia32                     |
 
 ---
 
