@@ -30,10 +30,9 @@ import {
   ReassembleXMLFileHandler,
 } from "config-disassembler";
 
-// Split XML into smaller files
 const disassemble = new DisassembleXMLFileHandler();
 
-/* Disassemble Options
+/* Disassemble XML Options
 * filePath = required. Path to the XML file or directory to disassemble.
 * strategy = optional (default: unique-id). Disassembly strategy (unique-id or grouped-by-tag).
 * uniqueIdElements = optional for unique-id strategy. Comma-separated element names used to derive filenames for nested elements.
@@ -80,11 +79,10 @@ disassemble.disassemble({
   postPurge: true,
 });
 
-// Rebuild XML from a disassembled file directory
 const reassemble = new ReassembleXMLFileHandler();
 
-/* Reassemble Options
-* filePath = required. Must be a folder for reassembly
+/* Reassemble XML Options
+* filePath = required. Folder containing disassembled files to reassemble into 1 XML.
 * fileExtension = optional (default: `.xml`). Set explicit file extension.
 * postPurge = optional (default: false). Delete disassembled files after reassembly.
 */ 
