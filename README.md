@@ -42,6 +42,7 @@ disassemble.disassemble({
   format: "json",
   prePurge: true,
   postPurge: true,
+  ignorePath: ".cdignore",
 });
 
 // Or, disassemble using grouped-by-tag strategy
@@ -49,6 +50,22 @@ disassemble.disassemble({
   filePath: "My.permissionset-meta.xml",
   strategy: "grouped-by-tag",
   format: "json",
+});
+
+// Or, disassemble using grouped-by-tag strategy with split-tags
+disassemble.disassemble({
+  filePath: "My.permissionset-meta.xml",
+  strategy: "grouped-by-tag",
+  splitTags: "objectPermissions:split:object,fieldPermissions:group:field",
+});
+
+// Or, disassemble an XML over multiple-levels with unique-id strategy
+disassemble.disassemble({
+  filePath: "Cloud_Kicks_Inner_Circle.loyaltyProgramSetup-meta.xml",
+  strategy: "unique-id",
+  uniqueIdElements: "fullName,name,processName",
+  multiLevel: "programProcesses:programProcesses:parameterName,ruleName",
+  postPurge: true,
 });
 
 // Rebuild XML from a disassembled file directory
