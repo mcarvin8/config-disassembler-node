@@ -71,9 +71,14 @@ disassemble.disassemble({
 // Rebuild XML from a disassembled file directory
 const reassemble = new ReassembleXMLFileHandler();
 
+// Reassembly Flags
+// 1. filePath. required: must be a folder for reassembly
+// 2. fileExtension. optional: set explicit file extension (default: `.xml`)
+// 3. postPurge. optional: delete disassembled files after reassembly (default: false)
 reassemble.reassemble({
-  filePath: "My", // must be a folder for reassembly
-  fileExtension: "permissionset-meta.xml", // set explicit file extension (default: `.xml`)
+  filePath: "My",
+  fileExtension: "permissionset-meta.xml",
+  postPurge: true,
 });
 ```
 
