@@ -33,6 +33,18 @@ import {
 // Split XML into smaller files
 const disassemble = new DisassembleXMLFileHandler();
 
+/* Disassemble Options
+* filePath = required. Path to the XML file or directory to disassemble.
+* strategy = optional (default: unique-id). Disassembly strategy (unique-id or grouped-by-tag).
+* uniqueIdElements = optional for unique-id strategy. Comma-separated element names used to derive filenames for nested elements.
+* multiLevel = optional for unique-id strategy. One or more multi-level specs: file_pattern:root_to_strip:unique_id_elements. Pass a string (single rule) or a string[] for several rules; semicolon-separated strings are also accepted.
+* splitTags = optional for grouped-by-tag strategy. split or group nested tags.
+* prePurge = optional (default: false). Delete any pre-existing disassembled files before disassembly.
+* postPurge = optional (default: false). Delete the XML file after successfully disassembling it.
+* format = optional (default: xml). Output format: xml, json, json5, yaml.
+* ignorePath = optional (default: .cdignore). Path to a .gitignore-like file to skip files while disassembling.
+*/
+
 // Disassemble using unique-ID strategy
 disassemble.disassemble({
   filePath: "My.permissionset-meta.xml",
@@ -71,10 +83,12 @@ disassemble.disassemble({
 // Rebuild XML from a disassembled file directory
 const reassemble = new ReassembleXMLFileHandler();
 
-// Reassembly Flags
-// 1. filePath. required: must be a folder for reassembly
-// 2. fileExtension. optional: set explicit file extension (default: `.xml`)
-// 3. postPurge. optional: delete disassembled files after reassembly (default: false)
+/* Reassemble Options
+* filePath = required. Must be a folder for reassembly
+* fileExtension = optional (default: `.xml`). Set explicit file extension.
+* postPurge = optional (default: false). Delete disassembled files after reassembly.
+*/ 
+
 reassemble.reassemble({
   filePath: "My",
   fileExtension: "permissionset-meta.xml",
