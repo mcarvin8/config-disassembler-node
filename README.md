@@ -1,4 +1,4 @@
-# config-disassembler-node
+# config-disassembler
 
 [![NPM](https://img.shields.io/npm/v/config-disassembler.svg?label=config-disassembler)](https://www.npmjs.com/package/config-disassembler)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](https://raw.githubusercontent.com/mcarvin8/config-disassembler-node/main/LICENSE.md)
@@ -40,6 +40,8 @@ disassemble.disassemble({
     "application,apexClass,name,flow,object,recordType,tab,field",
   strategy: "unique-id",
   format: "json",
+  prePurge: true,
+  postPurge: true,
 });
 
 // Or, disassemble using grouped-by-tag strategy
