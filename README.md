@@ -98,7 +98,7 @@ reassemble.reassemble({
 
 ## Value-Format API Examples
 
-> Use this for JSON, JSON5, JSONC, YAML, TOML, and INI configs.
+> Use this for JSON, JSON5, JSONC, YAML, TOML, TOON, and INI configs.
 
 ```ts
 import {
