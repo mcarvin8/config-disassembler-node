@@ -27,6 +27,7 @@ use config_disassembler::reassemble::{reassemble as cd_reassemble, ReassembleOpt
 use config_disassembler::xml::{
     cli::{parse_multi_level_spec, parse_multi_level_specs},
     DecomposeRule, DisassembleXmlFileHandler, MultiLevelRule, ReassembleXmlFileHandler,
+    parse_xml as xml_parse_xml,
 };
 use napi::bindgen_prelude::Either;
 use napi::Error;
@@ -89,6 +90,26 @@ pub struct ReassembleXmlOptions {
     pub file_path: String,
     pub file_extension: Option<String>,
     pub post_purge: Option<bool>,
+}
+
+/// Parse an XML file at `filePath` into a plain JavaScript object.
+///
+/// Mirrors `config_disassembler::xml::parse_xml`. Returns the parsed
+/// document on success, or `null` when the file cannot be read or is not
+/// valid XML (the underlying Rust function logs the error via `env_logger`).
+///
+/// ```js
+/// const { parseXml } = require('config-disassembler-node');
+/// const doc = await parseXml('path/to/file.xml');
+/// if (doc) { console.log(doc); }
+/// ```
+#[napi]
+pub fn parse_xml(file_path: String) -> napi::Result<serde_json::Value> {
+    let result = runtime().block_on(async { xml_parse_xml(&file_path).await });
+    match result {
+        Some(v) => Ok(v),
+        None => Ok(serde_json::Value::Null),
+    }
 }
 
 /// Disassembler for XML files. Mirrors the `xml` subcommand of the
