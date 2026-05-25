@@ -5,6 +5,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.3.0](https://github.com/mcarvin8/config-disassembler-node/compare/v2.2.0...v2.3.0) (2026-05-25)
+
+
+### Features
+
+* **xml:** expose parse_xml to Node.js bindings ([#31](https://github.com/mcarvin8/config-disassembler-node/issues/31)) ([62b613e](https://github.com/mcarvin8/config-disassembler-node/commit/62b613e9a09bd533e3e7dff7db8c0ca60f1009f4))
+
 ## [2.2.0](https://github.com/mcarvin8/config-disassembler-node/compare/v2.1.0...v2.2.0) (2026-05-21)
 
 
