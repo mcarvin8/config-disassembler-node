@@ -10,7 +10,7 @@ exclude = ["index.node"]
 crate-type = ["cdylib"]
 
 [dependencies]
-napi = { version = "3", default-features = false, features = ["napi4"] }
+napi = { version = "3", default-features = false, features = ["napi4", "serde-json"] }
 napi-derive = "3"
 config-disassembler = "0.5.3"
 tokio = { version = "1", features = ["rt-multi-thread", "macros", "fs", "io-util"] }

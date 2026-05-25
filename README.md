@@ -28,6 +28,7 @@ npm install config-disassembler
 import {
   DisassembleXMLFileHandler,
   ReassembleXMLFileHandler,
+  parseXml,
 } from "config-disassembler";
 
 const disassemble = new DisassembleXMLFileHandler();
@@ -92,6 +93,16 @@ reassemble.reassemble({
   fileExtension: "permissionset-meta.xml",
   postPurge: true,
 });
+
+/* parseXml
+ * filePath = required. Path to the XML file to parse.
+ * Returns the parsed XML document as a plain JavaScript object, or null
+ * if the file cannot be read or is not valid XML.
+ */
+const doc = await parseXml("My.permissionset-meta.xml");
+if (doc) {
+  console.log(doc);
+}
 ```
 
 ---
