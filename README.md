@@ -8,7 +8,7 @@ Node.js bindings for the Rust [`config-disassembler`](https://crates.io/crates/c
 
 Use it to disassemble large configuration files into smaller, version-control–friendly files and reassemble them later.
 
-The Node bindings closely mirror the Rust crate APIs and behavior. For complete documentation and behavior details, see the Rust crate [documentation](https://github.com/mcarvin8/config-disassembler).
+For full option documentation and behavior details, see the Rust crate [documentation](https://github.com/mcarvin8/config-disassembler).
 
 ---
 
@@ -20,9 +20,7 @@ npm install config-disassembler
 
 ---
 
-## XML API Examples
-
-> Use this to disassemble a large XML into smaller files (XML, JSON, JSON5, YAML) and reassemble the XML.
+## XML API
 
 ```ts
 import {
@@ -31,74 +29,17 @@ import {
   parseXml,
 } from "config-disassembler";
 
-const disassemble = new DisassembleXMLFileHandler();
-
-/* Disassemble XML Options
-* filePath = required. Path to the XML file or directory to disassemble.
-* strategy = optional (default: unique-id). Disassembly strategy (unique-id or grouped-by-tag).
-* uniqueIdElements = optional for unique-id strategy. Comma-separated element names used to derive filenames for nested elements.
-* multiLevel = optional for unique-id strategy. One or more multi-level specs: file_pattern:root_to_strip:unique_id_elements. Pass a string (single rule) or a string[] for several rules; semicolon-separated strings are also accepted.
-* splitTags = optional for grouped-by-tag strategy. split or group nested tags.
-* prePurge = optional (default: false). Delete any pre-existing disassembled files before disassembly.
-* postPurge = optional (default: false). Delete the XML file after successfully disassembling it.
-* format = optional (default: xml). Output format: xml, json, json5, yaml.
-* ignorePath = optional (default: .cdignore). Path to a .gitignore-like file to skip files while disassembling.
-*/
-
-// Disassemble using unique-ID strategy
-disassemble.disassemble({
+await new DisassembleXMLFileHandler().disassemble({
   filePath: "My.permissionset-meta.xml",
-  uniqueIdElements:
-    "application,apexClass,name,flow,object,recordType,tab,field",
-  strategy: "unique-id",
-  format: "json",
-  prePurge: true,
-  postPurge: true,
-  ignorePath: ".cdignore",
-});
-
-// Or, disassemble using grouped-by-tag strategy
-disassemble.disassemble({
-  filePath: "My.permissionset-meta.xml",
-  strategy: "grouped-by-tag",
-  format: "json",
-});
-
-// Or, disassemble using grouped-by-tag strategy with split-tags
-disassemble.disassemble({
-  filePath: "My.permissionset-meta.xml",
-  strategy: "grouped-by-tag",
-  splitTags: "objectPermissions:split:object,fieldPermissions:group:field",
-});
-
-// Or, disassemble an XML over multiple-levels with unique-id strategy
-disassemble.disassemble({
-  filePath: "Cloud_Kicks_Inner_Circle.loyaltyProgramSetup-meta.xml",
-  strategy: "unique-id",
-  uniqueIdElements: "fullName,name,processName",
-  multiLevel: "programProcesses:programProcesses:parameterName,ruleName",
+  uniqueIdElements: "application,apexClass,name,flow,object,recordType,tab,field",
   postPurge: true,
 });
 
-const reassemble = new ReassembleXMLFileHandler();
-
-/* Reassemble XML Options
-* filePath = required. Folder containing disassembled files to reassemble into 1 XML.
-* fileExtension = optional (default: `.xml`). Set explicit file extension.
-* postPurge = optional (default: false). Delete disassembled files after reassembly.
-*/ 
-
-reassemble.reassemble({
+await new ReassembleXMLFileHandler().reassemble({
   filePath: "My",
   fileExtension: "permissionset-meta.xml",
-  postPurge: true,
 });
 
-/* parseXml
- * filePath = required. Path to the XML file to parse.
- * Returns the parsed XML document as a plain JavaScript object, or null
- * if the file cannot be read or is not valid XML.
- */
 const doc = await parseXml("My.permissionset-meta.xml");
 if (doc) {
   console.log(doc);
@@ -107,9 +48,7 @@ if (doc) {
 
 ---
 
-## Value-Format API Examples
-
-> Use this for JSON, JSON5, JSONC, YAML, TOML, TOON, and INI configs.
+## Value-Format API
 
 ```ts
 import {
@@ -117,20 +56,14 @@ import {
   ReassembleConfigFileHandler,
 } from "config-disassembler";
 
-// Disassemble config
-const disassemble = new DisassembleConfigFileHandler();
-
-const outputDir = disassemble.disassemble({
+const outDir = new DisassembleConfigFileHandler().disassemble({
   input: "config.json",
   outputFormat: "yaml",
   uniqueId: "id",
 });
 
-// Reassemble config
-const reassemble = new ReassembleConfigFileHandler();
-
-reassemble.reassemble({
-  inputDir: outputDir,
+new ReassembleConfigFileHandler().reassemble({
+  inputDir: outDir,
   output: "config.rebuilt.json",
   outputFormat: "json",
 });
