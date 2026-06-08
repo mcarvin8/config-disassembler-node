@@ -4,6 +4,7 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+      day: "wednesday"
     commit-message:
       prefix: "feat(rust)"
     allow:
