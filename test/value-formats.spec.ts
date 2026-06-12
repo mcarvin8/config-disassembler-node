@@ -205,7 +205,6 @@ describe("config-disassembler value-format test suite", () => {
     expect(() =>
       disassembleHandler.disassemble({
         input: join(mockDir, "config.json"),
-        // @ts-expect-error - intentionally invalid format for runtime test
         outputFormat: "bogus",
       }),
     ).toThrow(/invalid format/);
