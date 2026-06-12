@@ -37,6 +37,7 @@
     "build": "napi build --platform --release",
     "build:debug": "napi build --platform",
     "test": "vitest run",
+    "typecheck": "tsc --noEmit",
     "prepare": "husky"
   },
   "devDependencies": {
