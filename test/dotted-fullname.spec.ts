@@ -2,10 +2,7 @@ import { promises as fs } from "fs";
 import { strictEqual, ok } from "assert";
 import { join } from "path";
 
-import {
-  DisassembleXMLFileHandler,
-  ReassembleXMLFileHandler,
-} from "../";
+import { DisassembleXMLFileHandler, ReassembleXMLFileHandler } from "../";
 
 // Regression test for the upstream Rust crate fix shipped in
 // `config-disassembler` 0.4.4: the disassembler used to derive the output

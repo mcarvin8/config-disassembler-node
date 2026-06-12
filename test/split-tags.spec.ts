@@ -1,9 +1,6 @@
 import { promises as fs } from "fs";
 import { strictEqual } from "assert";
-import {
-  DisassembleXMLFileHandler,
-  ReassembleXMLFileHandler,
-} from "../";
+import { DisassembleXMLFileHandler, ReassembleXMLFileHandler } from "../";
 
 const fixtureDir = "fixtures/split-tags";
 const baselineFile = `${fixtureDir}/HR_Admin.permissionset-meta.xml`;

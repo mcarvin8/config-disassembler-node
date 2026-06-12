@@ -1,9 +1,6 @@
 import { promises as fs } from "fs";
 import { strictEqual } from "assert";
-import {
-  DisassembleXMLFileHandler,
-  ReassembleXMLFileHandler,
-} from "../";
+import { DisassembleXMLFileHandler, ReassembleXMLFileHandler } from "../";
 
 const fixtureDir = "fixtures/multi-level";
 const baselineFile = `${fixtureDir}/Cloud_Kicks_Inner_Circle.loyaltyProgramSetup-meta.xml`;

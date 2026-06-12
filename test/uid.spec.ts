@@ -1,10 +1,7 @@
 import { promises as fs } from "fs";
 import { resolve } from "path";
 
-import {
-  DisassembleXMLFileHandler,
-  ReassembleXMLFileHandler,
-} from "../";
+import { DisassembleXMLFileHandler, ReassembleXMLFileHandler } from "../";
 import { compareDirectories } from "./helpers/compare";
 const sampleDir: string = "fixtures";
 const mockDir: string = "mock";

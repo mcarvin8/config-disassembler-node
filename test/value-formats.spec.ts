@@ -2,10 +2,7 @@ import { promises as fs } from "fs";
 import { existsSync } from "fs";
 import { join } from "path";
 
-import {
-  DisassembleConfigFileHandler,
-  ReassembleConfigFileHandler,
-} from "../";
+import { DisassembleConfigFileHandler, ReassembleConfigFileHandler } from "../";
 
 const sampleDir = "fixtures/value-formats";
 const mockDir = "mock-value-formats";

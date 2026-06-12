@@ -2,10 +2,7 @@ import { promises as fs } from "fs";
 import { strictEqual, ok, deepStrictEqual } from "assert";
 import { join } from "path";
 
-import {
-  DisassembleXMLFileHandler,
-  ReassembleXMLFileHandler,
-} from "../";
+import { DisassembleXMLFileHandler, ReassembleXMLFileHandler } from "../";
 
 // Regression test for the upstream Rust crate feature shipped in
 // `config-disassembler` 0.4.5: `unique_id_elements` candidates may now be

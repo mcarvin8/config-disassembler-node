@@ -2,10 +2,7 @@ import { promises as fs } from "fs";
 import { ok, strictEqual } from "assert";
 import { join } from "path";
 
-import {
-  DisassembleXMLFileHandler,
-  ReassembleXMLFileHandler,
-} from "../";
+import { DisassembleXMLFileHandler, ReassembleXMLFileHandler } from "../";
 
 // Regression spec for the two upstream Rust fixes shipped in
 // `config-disassembler` 0.5.0:
@@ -196,10 +193,7 @@ describe("uniqueIdElements path-segment sanitization (config-disassembler >= 0.5
     reassembleHandler = new ReassembleXMLFileHandler();
     await fs.rm(SANITIZE_MOCK_DIR, { recursive: true, force: true });
     await fs.mkdir(SANITIZE_MOCK_DIR, { recursive: true });
-    await fs.writeFile(
-      join(SANITIZE_MOCK_DIR, SANITIZE_FILE),
-      ENTITLEMENT_XML,
-    );
+    await fs.writeFile(join(SANITIZE_MOCK_DIR, SANITIZE_FILE), ENTITLEMENT_XML);
   });
 
   afterAll(async () => {
