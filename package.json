@@ -42,15 +42,17 @@
     "prepare": "husky"
   },
   "lint-staged": {
-    "**/*": "prettier --write \"**/*.{js,ts}\" --ignore-unknown"
+    "**/*": "prettier --write --ignore-unknown"
   },
   "devDependencies": {
     "@commitlint/cli": "20.5.0",
     "@commitlint/config-conventional": "20.5.0",
+    "@eslint/js": "10.0.1",
     "@napi-rs/cli": "3.6.2",
     "@types/node": "25.5.0",
     "eslint": "10.0.3",
     "eslint-config-prettier": "10.1.2",
+    "globals": "17.6.0",
     "husky": "9.1.7",
     "lint-staged": "16.3.3",
     "prettier": "3.8.1",
