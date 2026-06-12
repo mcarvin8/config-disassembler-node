@@ -1,5 +1,4 @@
 import js from "@eslint/js";
-import eslintConfigPrettier from "eslint-config-prettier";
 import globals from "globals";
 
 export default [
@@ -13,5 +12,4 @@ export default [
       ecmaVersion: 2021,
     },
   },
-  eslintConfigPrettier,
 ];
