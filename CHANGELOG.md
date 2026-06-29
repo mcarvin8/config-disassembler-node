@@ -5,6 +5,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.6.0](https://github.com/mcarvin8/config-disassembler-node/compare/v2.5.0...v2.6.0) (2026-06-29)
+
+
+### Features
+
+* add sidecar elements support for XML disassemble/reassemble ([#39](https://github.com/mcarvin8/config-disassembler-node/issues/39)) ([e3e777b](https://github.com/mcarvin8/config-disassembler-node/commit/e3e777b52097c40e9333f73a3bb70276952e52ed))
+
 ## [2.5.0](https://github.com/mcarvin8/config-disassembler-node/compare/v2.4.0...v2.5.0) (2026-06-11)
 
 
