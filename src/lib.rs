@@ -25,8 +25,8 @@ use config_disassembler::disassemble::{disassemble as cd_disassemble, Disassembl
 use config_disassembler::format::Format;
 use config_disassembler::reassemble::{reassemble as cd_reassemble, ReassembleOptions};
 use config_disassembler::xml::{
-    cli::{parse_multi_level_spec, parse_multi_level_specs},
-    DecomposeRule, DisassembleXmlFileHandler, MultiLevelRule, ReassembleXmlFileHandler,
+    cli::{parse_multi_level_spec, parse_multi_level_specs, parse_sidecar_specs},
+    DecomposeRule, DisassembleXmlFileHandler, MultiLevelRule, ReassembleXmlFileHandler, SidecarSpec,
     parse_xml as xml_parse_xml,
 };
 use napi::bindgen_prelude::Either;
@@ -82,6 +82,14 @@ pub struct DisassembleXmlOptions {
     /// string, a `;`-separated bundle, or an array of either.
     pub multi_level: Option<Either<String, Vec<String>>>,
     pub split_tags: Option<String>,
+    /// Comma-separated `element:extension` pairs identifying XML elements whose
+    /// text content should be extracted to typed companion files during
+    /// disassembly and injected back during reassembly. Example: `"schema:yaml"`.
+    ///
+    /// Useful for XML types that embed non-XML blobs (OpenAPI YAML, WSDL, JSON
+    /// schemas) as escaped text. Extracting them lets native tooling operate on
+    /// the blob directly and keeps large content changes out of the XML diff.
+    pub sidecar_elements: Option<String>,
 }
 
 /// Options accepted by [`ReassembleXMLFileHandler::reassemble`].
@@ -137,6 +145,11 @@ impl DisassembleXMLFileHandler {
         let format = opts.format.unwrap_or_else(|| "xml".to_string());
         let multi_level_specs = flatten_string_or_array(opts.multi_level);
         let split_tags_str = opts.split_tags;
+        let sidecar_specs: Vec<SidecarSpec> = opts
+            .sidecar_elements
+            .as_deref()
+            .map(parse_sidecar_specs)
+            .unwrap_or_default();
 
         // Parse "tag:mode:field" or "tag:path:mode:field" (comma-separated)
         // into DecomposeRule list (same as crate CLI -p/--split-tags).
@@ -198,6 +211,11 @@ impl DisassembleXMLFileHandler {
         } else {
             Some(multi_level_rules.as_slice())
         };
+        let sidecar_specs_ref = if sidecar_specs.is_empty() {
+            None
+        } else {
+            Some(sidecar_specs.as_slice())
+        };
 
         let result = runtime().block_on(async {
             let mut handler = DisassembleXmlFileHandler::new();
@@ -212,6 +230,7 @@ impl DisassembleXMLFileHandler {
                     &format,
                     multi_level_rules_ref,
                     decompose_rules_ref,
+                    sidecar_specs_ref,
                 )
                 .await
         });
@@ -243,7 +262,12 @@ impl ReassembleXMLFileHandler {
         let result = runtime().block_on(async {
             let handler = ReassembleXmlFileHandler::new();
             handler
-                .reassemble(&file_path, file_extension.as_deref(), post_purge)
+                .reassemble(
+                    &file_path,
+                    file_extension.as_deref(),
+                    post_purge,
+                    None,
+                )
                 .await
         });
 
