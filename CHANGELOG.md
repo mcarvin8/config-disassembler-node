@@ -5,6 +5,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.7.0](https://github.com/mcarvin8/config-disassembler-node/compare/v2.6.0...v2.7.0) (2026-06-30)
+
+
+### Features
+
+* **rust:** bump rust crate to preserve original format of sidecar content through round-trip ([#41](https://github.com/mcarvin8/config-disassembler-node/issues/41)) ([9665fd9](https://github.com/mcarvin8/config-disassembler-node/commit/9665fd91005b747ebddd18696281eaea65d769fd))
+
 ## [2.6.0](https://github.com/mcarvin8/config-disassembler-node/compare/v2.5.0...v2.6.0) (2026-06-29)
 
 
