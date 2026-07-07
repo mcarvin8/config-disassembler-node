@@ -5,6 +5,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.9.0](https://github.com/mcarvin8/config-disassembler-node/compare/v2.8.0...v2.9.0) (2026-07-07)
+
+
+### Features
+
+* **xml:** add verifyXmlRoundtrip binding ([#45](https://github.com/mcarvin8/config-disassembler-node/issues/45)) ([15f38f9](https://github.com/mcarvin8/config-disassembler-node/commit/15f38f9c23fa6748ed8c5a1c16026fc03deff7a5))
+
 ## [2.8.0](https://github.com/mcarvin8/config-disassembler-node/compare/v2.7.0...v2.8.0) (2026-07-07)
 
 
