@@ -5,7 +5,8 @@
 //!
 //! * XML disassemble/reassemble via [`DisassembleXMLFileHandler`] and
 //!   [`ReassembleXMLFileHandler`] – ports of the `xml-disassembler` API
-//!   now living under [`config_disassembler::xml`].
+//!   now living under [`config_disassembler::xml`]. [`verify_xml_roundtrip`]
+//!   exposes the crate's round-trip invariant check for dry-run/CI use.
 //! * Value-model disassemble/reassemble via
 //!   [`DisassembleConfigFileHandler`] and
 //!   [`ReassembleConfigFileHandler`] – JSON, JSON5, JSONC, YAML, TOON,
@@ -26,8 +27,8 @@ use config_disassembler::format::Format;
 use config_disassembler::reassemble::{reassemble as cd_reassemble, ReassembleOptions};
 use config_disassembler::xml::{
     cli::{parse_multi_level_spec, parse_multi_level_specs, parse_sidecar_specs},
-    DecomposeRule, DisassembleXmlFileHandler, MultiLevelRule, ReassembleXmlFileHandler, SidecarSpec,
-    parse_xml as xml_parse_xml,
+    parse_xml as xml_parse_xml, verify_roundtrip, DecomposeRule, DisassembleXmlFileHandler,
+    MultiLevelRule, ReassembleXmlFileHandler, RoundtripStatus, SidecarSpec, VerifyOptions,
 };
 use napi::bindgen_prelude::Either;
 use napi::Error;
@@ -60,6 +61,84 @@ fn flatten_string_or_array(value: Option<Either<String, Vec<String>>>) -> Vec<St
         None => Vec::new(),
         Some(Either::A(s)) => vec![s],
         Some(Either::B(v)) => v,
+    }
+}
+
+/// Parse the `multiLevel`, `splitTags`, and `sidecarElements` option strings
+/// shared by [`DisassembleXMLFileHandler::disassemble`] and
+/// [`verify_xml_roundtrip`] into their corresponding rule lists.
+fn build_disassemble_rules(
+    multi_level: Option<Either<String, Vec<String>>>,
+    split_tags: Option<String>,
+    sidecar_elements: Option<String>,
+) -> (Vec<MultiLevelRule>, Vec<DecomposeRule>, Vec<SidecarSpec>) {
+    let multi_level_specs = flatten_string_or_array(multi_level);
+    let sidecar_specs: Vec<SidecarSpec> = sidecar_elements
+        .as_deref()
+        .map(parse_sidecar_specs)
+        .unwrap_or_default();
+
+    // Parse "tag:mode:field" or "tag:path:mode:field" (comma-separated)
+    // into DecomposeRule list (same as crate CLI -p/--split-tags).
+    let decompose_rules: Vec<DecomposeRule> = split_tags
+        .as_deref()
+        .map(|spec| {
+            let mut rules = Vec::new();
+            for part in spec.split(',') {
+                let part = part.trim();
+                let segments: Vec<&str> = part.splitn(4, ':').collect();
+                if segments.len() >= 3 {
+                    let tag = segments[0].to_string();
+                    let (path_segment, mode, field) = if segments.len() == 3 {
+                        (
+                            tag.clone(),
+                            segments[1].to_string(),
+                            segments[2].to_string(),
+                        )
+                    } else {
+                        (
+                            segments[1].to_string(),
+                            segments[2].to_string(),
+                            segments[3].to_string(),
+                        )
+                    };
+                    if !tag.is_empty() && !mode.is_empty() && !field.is_empty() {
+                        rules.push(DecomposeRule {
+                            tag,
+                            path_segment,
+                            mode,
+                            field,
+                        });
+                    }
+                }
+            }
+            rules
+        })
+        .unwrap_or_default();
+
+    // Build a flat list of MultiLevelRule values. Each input string may
+    // carry one or more `;`-separated rules (matching the CLI grammar);
+    // array entries are concatenated.
+    let mut multi_level_rules: Vec<MultiLevelRule> = Vec::new();
+    for spec in &multi_level_specs {
+        if spec.contains(';') {
+            multi_level_rules.extend(parse_multi_level_specs(spec));
+        } else if let Some(rule) = parse_multi_level_spec(spec) {
+            multi_level_rules.push(rule);
+        }
+    }
+
+    (multi_level_rules, decompose_rules, sidecar_specs)
+}
+
+/// `&[T]` for a non-empty slice, `None` otherwise — the shape the
+/// `config_disassembler::xml` disassemble/reassemble/verify functions
+/// expect for their optional rule-list parameters.
+fn non_empty_slice<T>(v: &[T]) -> Option<&[T]> {
+    if v.is_empty() {
+        None
+    } else {
+        Some(v)
     }
 }
 
@@ -143,79 +222,12 @@ impl DisassembleXMLFileHandler {
         let post_purge = opts.post_purge.unwrap_or(false);
         let ignore_path = opts.ignore_path.unwrap_or_else(|| ".cdignore".to_string());
         let format = opts.format.unwrap_or_else(|| "xml".to_string());
-        let multi_level_specs = flatten_string_or_array(opts.multi_level);
-        let split_tags_str = opts.split_tags;
-        let sidecar_specs: Vec<SidecarSpec> = opts
-            .sidecar_elements
-            .as_deref()
-            .map(parse_sidecar_specs)
-            .unwrap_or_default();
+        let (multi_level_rules, decompose_rules, sidecar_specs) =
+            build_disassemble_rules(opts.multi_level, opts.split_tags, opts.sidecar_elements);
 
-        // Parse "tag:mode:field" or "tag:path:mode:field" (comma-separated)
-        // into DecomposeRule list (same as crate CLI -p/--split-tags).
-        let decompose_rules: Vec<DecomposeRule> = split_tags_str
-            .as_deref()
-            .map(|spec| {
-                let mut rules = Vec::new();
-                for part in spec.split(',') {
-                    let part = part.trim();
-                    let segments: Vec<&str> = part.splitn(4, ':').collect();
-                    if segments.len() >= 3 {
-                        let tag = segments[0].to_string();
-                        let (path_segment, mode, field) = if segments.len() == 3 {
-                            (
-                                tag.clone(),
-                                segments[1].to_string(),
-                                segments[2].to_string(),
-                            )
-                        } else {
-                            (
-                                segments[1].to_string(),
-                                segments[2].to_string(),
-                                segments[3].to_string(),
-                            )
-                        };
-                        if !tag.is_empty() && !mode.is_empty() && !field.is_empty() {
-                            rules.push(DecomposeRule {
-                                tag,
-                                path_segment,
-                                mode,
-                                field,
-                            });
-                        }
-                    }
-                }
-                rules
-            })
-            .unwrap_or_default();
-
-        // Build a flat list of MultiLevelRule values. Each input string may
-        // carry one or more `;`-separated rules (matching the CLI grammar);
-        // array entries are concatenated.
-        let mut multi_level_rules: Vec<MultiLevelRule> = Vec::new();
-        for spec in &multi_level_specs {
-            if spec.contains(';') {
-                multi_level_rules.extend(parse_multi_level_specs(spec));
-            } else if let Some(rule) = parse_multi_level_spec(spec) {
-                multi_level_rules.push(rule);
-            }
-        }
-
-        let decompose_rules_ref = if decompose_rules.is_empty() {
-            None
-        } else {
-            Some(decompose_rules.as_slice())
-        };
-        let multi_level_rules_ref = if multi_level_rules.is_empty() {
-            None
-        } else {
-            Some(multi_level_rules.as_slice())
-        };
-        let sidecar_specs_ref = if sidecar_specs.is_empty() {
-            None
-        } else {
-            Some(sidecar_specs.as_slice())
-        };
+        let decompose_rules_ref = non_empty_slice(&decompose_rules);
+        let multi_level_rules_ref = non_empty_slice(&multi_level_rules);
+        let sidecar_specs_ref = non_empty_slice(&sidecar_specs);
 
         let result = runtime().block_on(async {
             let mut handler = DisassembleXmlFileHandler::new();
@@ -262,16 +274,97 @@ impl ReassembleXMLFileHandler {
         let result = runtime().block_on(async {
             let handler = ReassembleXmlFileHandler::new();
             handler
-                .reassemble(
-                    &file_path,
-                    file_extension.as_deref(),
-                    post_purge,
-                    None,
-                )
+                .reassemble(&file_path, file_extension.as_deref(), post_purge, None)
                 .await
         });
 
         result.map_err(|e| Error::from_reason(format!("Reassemble error: {}", e)))
+    }
+}
+
+/// Options accepted by [`verify_xml_roundtrip`]. Shares its structural
+/// options with [`DisassembleXmlOptions`] (minus `format`/purge flags,
+/// which are fixed internally for the round trip) so the same values
+/// used for a real disassembly run can be reused to verify it.
+#[napi(object)]
+pub struct VerifyXmlOptions {
+    pub file_path: String,
+    pub unique_id_elements: Option<String>,
+    pub strategy: Option<String>,
+    pub ignore_path: Option<String>,
+    /// Extension (may itself contain dots, e.g. `"permissionset-meta.xml"`)
+    /// used when reassembling the round-trip copy — same parameter as
+    /// [`ReassembleXmlOptions::file_extension`]. Defaults to whatever
+    /// suffix `filePath` has beyond the disassembled directory's name, so
+    /// the reconstructed file matches the original filename automatically.
+    pub file_extension: Option<String>,
+    pub multi_level: Option<Either<String, Vec<String>>>,
+    pub split_tags: Option<String>,
+    pub sidecar_elements: Option<String>,
+}
+
+/// Result of [`verify_xml_roundtrip`]. `status` is one of `"identical"`,
+/// `"reordered"`, or `"drift"`; `reason` is set only for `"drift"`.
+#[napi(object)]
+pub struct VerifyXmlResult {
+    pub status: String,
+    pub reason: Option<String>,
+}
+
+/// Disassemble and reassemble `opts.filePath` inside an isolated temp
+/// directory, then report whether the reconstructed XML matches the
+/// original. The caller's file is never modified.
+///
+/// `"reordered"` means the round trip is semantically lossless but
+/// sibling/attribute order changed; `"drift"` means genuine content was
+/// lost or changed.
+///
+/// ```js
+/// const { verifyXmlRoundtrip } = require('config-disassembler-node');
+/// const result = await verifyXmlRoundtrip({ filePath: 'flow.xml' });
+/// if (result.status === 'drift') {
+///   throw new Error(`round-trip drift: ${result.reason}`);
+/// }
+/// ```
+#[napi]
+pub fn verify_xml_roundtrip(opts: VerifyXmlOptions) -> napi::Result<VerifyXmlResult> {
+    let file_path = opts.file_path;
+    let unique_id_elements = opts.unique_id_elements;
+    let strategy = opts.strategy;
+    let ignore_path = opts.ignore_path.unwrap_or_else(|| ".cdignore".to_string());
+    let file_extension = opts.file_extension;
+    let (multi_level_rules, decompose_rules, sidecar_specs) =
+        build_disassemble_rules(opts.multi_level, opts.split_tags, opts.sidecar_elements);
+
+    let verify_options = VerifyOptions {
+        unique_id_elements: unique_id_elements.as_deref(),
+        strategy: strategy.as_deref(),
+        ignore_path: &ignore_path,
+        file_extension: file_extension.as_deref(),
+        multi_level_rules: non_empty_slice(&multi_level_rules),
+        decompose_rules: non_empty_slice(&decompose_rules),
+        sidecar_specs: non_empty_slice(&sidecar_specs),
+    };
+
+    let result = runtime().block_on(async { verify_roundtrip(&file_path, verify_options).await });
+
+    match result {
+        Ok(RoundtripStatus::Identical) => Ok(VerifyXmlResult {
+            status: "identical".to_string(),
+            reason: None,
+        }),
+        Ok(RoundtripStatus::Reordered) => Ok(VerifyXmlResult {
+            status: "reordered".to_string(),
+            reason: None,
+        }),
+        Ok(RoundtripStatus::Drift(reason)) => Ok(VerifyXmlResult {
+            status: "drift".to_string(),
+            reason: Some(reason),
+        }),
+        Err(e) => Err(Error::from_reason(format!(
+            "verifyXmlRoundtrip error: {}",
+            e
+        ))),
     }
 }
 
