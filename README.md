@@ -27,6 +27,7 @@ import {
   DisassembleXMLFileHandler,
   ReassembleXMLFileHandler,
   parseXml,
+  verifyXmlRoundtrip,
 } from "config-disassembler";
 
 await new DisassembleXMLFileHandler().disassemble({
@@ -43,6 +44,16 @@ await new ReassembleXMLFileHandler().reassemble({
 const doc = await parseXml("My.permissionset-meta.xml");
 if (doc) {
   console.log(doc);
+}
+
+// Dry-run check: disassemble + reassemble in an isolated temp dir and report
+// whether the round trip is lossless. The real file is never touched.
+const result = await verifyXmlRoundtrip({
+  filePath: "My.permissionset-meta.xml",
+  uniqueIdElements: "application,apexClass,name,flow,object,recordType,tab,field",
+});
+if (result.status === "drift") {
+  throw new Error(`round-trip drift: ${result.reason}`);
 }
 ```
 
