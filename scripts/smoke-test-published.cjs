@@ -53,7 +53,7 @@ async function main() {
     // Disassemble + reassemble using deeply-nested fixture and unique ID elements
     console.log("[smoke] Disassemble (unique-id, xml)...");
     const handler = new DisassembleXMLFileHandler();
-    handler.disassemble({
+    await handler.disassemble({
       filePath: tmpFixtureDir,
       uniqueIdElements: UNIQUE_ID_ELEMENTS,
       strategy: "unique-id",
@@ -69,7 +69,7 @@ async function main() {
 
     console.log("[smoke] Reassemble...");
     const reassembleHandler = new ReassembleXMLFileHandler();
-    reassembleHandler.reassemble({
+    await reassembleHandler.reassemble({
       filePath: path.join(tmpFixtureDir, "Get_Info"),
       fileExtension: "flow-meta.xml",
     });
