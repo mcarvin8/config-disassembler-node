@@ -20,7 +20,6 @@
 
 use std::path::PathBuf;
 use std::str::FromStr;
-use std::sync::OnceLock;
 
 use config_disassembler::disassemble::{disassemble as cd_disassemble, DisassembleOptions};
 use config_disassembler::format::Format;
@@ -33,17 +32,6 @@ use config_disassembler::xml::{
 use napi::bindgen_prelude::Either;
 use napi::Error;
 use napi_derive::napi;
-
-static RUNTIME: OnceLock<tokio::runtime::Runtime> = OnceLock::new();
-
-fn runtime() -> &'static tokio::runtime::Runtime {
-    RUNTIME.get_or_init(|| {
-        tokio::runtime::Builder::new_multi_thread()
-            .enable_all()
-            .build()
-            .expect("failed to create tokio runtime")
-    })
-}
 
 /// Initialize `env_logger` once when the addon is loaded so `RUST_LOG`
 /// keeps working the same way it did under the Neon entry point.
@@ -191,9 +179,8 @@ pub struct ReassembleXmlOptions {
 /// if (doc) { console.log(doc); }
 /// ```
 #[napi]
-pub fn parse_xml(file_path: String) -> napi::Result<serde_json::Value> {
-    let result = runtime().block_on(async { xml_parse_xml(&file_path).await });
-    match result {
+pub async fn parse_xml(file_path: String) -> napi::Result<serde_json::Value> {
+    match xml_parse_xml(&file_path).await {
         Some(v) => Ok(v),
         None => Ok(serde_json::Value::Null),
     }
@@ -214,7 +201,7 @@ impl DisassembleXMLFileHandler {
     }
 
     #[napi]
-    pub fn disassemble(&self, opts: DisassembleXmlOptions) -> napi::Result<()> {
+    pub async fn disassemble(&self, opts: DisassembleXmlOptions) -> napi::Result<()> {
         let file_path = opts.file_path;
         let unique_id_elements = opts.unique_id_elements;
         let strategy = opts.strategy.unwrap_or_else(|| "unique-id".to_string());
@@ -229,23 +216,21 @@ impl DisassembleXMLFileHandler {
         let multi_level_rules_ref = non_empty_slice(&multi_level_rules);
         let sidecar_specs_ref = non_empty_slice(&sidecar_specs);
 
-        let result = runtime().block_on(async {
-            let mut handler = DisassembleXmlFileHandler::new();
-            handler
-                .disassemble(
-                    &file_path,
-                    unique_id_elements.as_deref(),
-                    Some(&strategy),
-                    pre_purge,
-                    post_purge,
-                    &ignore_path,
-                    &format,
-                    multi_level_rules_ref,
-                    decompose_rules_ref,
-                    sidecar_specs_ref,
-                )
-                .await
-        });
+        let mut handler = DisassembleXmlFileHandler::new();
+        let result = handler
+            .disassemble(
+                &file_path,
+                unique_id_elements.as_deref(),
+                Some(&strategy),
+                pre_purge,
+                post_purge,
+                &ignore_path,
+                &format,
+                multi_level_rules_ref,
+                decompose_rules_ref,
+                sidecar_specs_ref,
+            )
+            .await;
 
         result.map_err(|e| Error::from_reason(format!("Disassemble error: {}", e)))
     }
@@ -266,17 +251,15 @@ impl ReassembleXMLFileHandler {
     }
 
     #[napi]
-    pub fn reassemble(&self, opts: ReassembleXmlOptions) -> napi::Result<()> {
+    pub async fn reassemble(&self, opts: ReassembleXmlOptions) -> napi::Result<()> {
         let file_path = opts.file_path;
         let file_extension = opts.file_extension;
         let post_purge = opts.post_purge.unwrap_or(false);
 
-        let result = runtime().block_on(async {
-            let handler = ReassembleXmlFileHandler::new();
-            handler
-                .reassemble(&file_path, file_extension.as_deref(), post_purge, None)
-                .await
-        });
+        let handler = ReassembleXmlFileHandler::new();
+        let result = handler
+            .reassemble(&file_path, file_extension.as_deref(), post_purge, None)
+            .await;
 
         result.map_err(|e| Error::from_reason(format!("Reassemble error: {}", e)))
     }
@@ -327,7 +310,7 @@ pub struct VerifyXmlResult {
 /// }
 /// ```
 #[napi]
-pub fn verify_xml_roundtrip(opts: VerifyXmlOptions) -> napi::Result<VerifyXmlResult> {
+pub async fn verify_xml_roundtrip(opts: VerifyXmlOptions) -> napi::Result<VerifyXmlResult> {
     let file_path = opts.file_path;
     let unique_id_elements = opts.unique_id_elements;
     let strategy = opts.strategy;
@@ -346,7 +329,7 @@ pub fn verify_xml_roundtrip(opts: VerifyXmlOptions) -> napi::Result<VerifyXmlRes
         sidecar_specs: non_empty_slice(&sidecar_specs),
     };
 
-    let result = runtime().block_on(async { verify_roundtrip(&file_path, verify_options).await });
+    let result = verify_roundtrip(&file_path, verify_options).await;
 
     match result {
         Ok(RoundtripStatus::Identical) => Ok(VerifyXmlResult {
