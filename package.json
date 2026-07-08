@@ -1,6 +1,6 @@
 {
   "name": "config-disassembler",
-  "version": "2.9.0",
+  "version": "3.0.0",
   "description": "Node.js bindings for the Rust config-disassembler crate.",
   "author": "Matt Carvin",
   "license": "MIT",

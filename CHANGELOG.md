@@ -5,6 +5,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.0.0](https://github.com/mcarvin8/config-disassembler-node/compare/v2.9.0...v3.0.0) (2026-07-08)
+
+
+### ⚠ BREAKING CHANGES
+
+* **xml:** disassemble/reassemble/parseXml/verifyXmlRoundtrip now return Promises instead of resolving synchronously. Any caller that invoked these without awaiting the result must add await, or it will no longer wait for the file to actually be processed.
+
+### Features
+
+* **xml:** expose disassemble/reassemble/parseXml/verifyXmlRoundtrip as true async ([#47](https://github.com/mcarvin8/config-disassembler-node/issues/47)) ([0bb779a](https://github.com/mcarvin8/config-disassembler-node/commit/0bb779adef8f2a67b0ff6bea8815e632365c97bf))
+
 ## [2.9.0](https://github.com/mcarvin8/config-disassembler-node/compare/v2.8.0...v2.9.0) (2026-07-07)
 
 
