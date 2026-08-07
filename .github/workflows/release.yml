@@ -203,7 +203,7 @@ jobs:
         run: NODE_AUTH_TOKEN="" npm publish --access public --tag latest --provenance
 
   smoke-test:
-    needs: publish
+    needs: [publish, release-please]
     if: needs.release-please.outputs.release_created == 'true'
     uses: ./.github/workflows/smoke-test.yml
     secrets: inherit
