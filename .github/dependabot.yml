@@ -9,8 +9,15 @@ updates:
       prefix: "feat(rust)"
     cooldown:
       default-days: 0
-    allow:
-      - dependency-name: "config-disassembler"
+    groups:
+      config-disassembler:
+        patterns:
+          - "config-disassembler"
+      cargo:
+        patterns:
+          - "*"
+        exclude-patterns:
+          - "config-disassembler"
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
