@@ -11,3 +11,13 @@ updates:
       default-days: 0
     allow:
       - dependency-name: "config-disassembler"
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    commit-message:
+      prefix: "build"
+    groups:
+      github-actions:
+        patterns:
+          - "*"
