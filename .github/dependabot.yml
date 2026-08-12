@@ -21,3 +21,12 @@ updates:
       github-actions:
         patterns:
           - "*"
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    commit-message:
+      prefix-development: "chore(dev-deps)"
+    groups:
+      dev-dependencies:
+        dependency-type: "development"
