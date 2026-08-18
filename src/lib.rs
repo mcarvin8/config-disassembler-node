@@ -157,6 +157,13 @@ pub struct DisassembleXmlOptions {
     /// schemas) as escaped text. Extracting them lets native tooling operate on
     /// the blob directly and keeps large content changes out of the XML diff.
     pub sidecar_elements: Option<String>,
+    /// Directory that ignore-path matching resolves relative paths against.
+    /// Defaults to the process's actual working directory when omitted.
+    ///
+    /// Set this instead of `process.chdir()`-ing before calling disassemble
+    /// — `process.chdir()` throws inside Node.js `worker_threads`, which
+    /// test runners like Vitest/Stryker use to pool test execution.
+    pub base_dir: Option<String>,
 }
 
 /// Options accepted by [`ReassembleXMLFileHandler::reassemble`].
@@ -209,6 +216,7 @@ impl DisassembleXMLFileHandler {
         let post_purge = opts.post_purge.unwrap_or(false);
         let ignore_path = opts.ignore_path.unwrap_or_else(|| ".cdignore".to_string());
         let format = opts.format.unwrap_or_else(|| "xml".to_string());
+        let base_dir = opts.base_dir;
         let (multi_level_rules, decompose_rules, sidecar_specs) =
             build_disassemble_rules(opts.multi_level, opts.split_tags, opts.sidecar_elements);
 
@@ -229,6 +237,7 @@ impl DisassembleXMLFileHandler {
                 multi_level_rules_ref,
                 decompose_rules_ref,
                 sidecar_specs_ref,
+                base_dir.as_deref(),
             )
             .await;
 
