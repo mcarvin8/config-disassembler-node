@@ -5,6 +5,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.3.0](https://github.com/mcarvin8/config-disassembler-node/compare/v3.2.0...v3.3.0) (2026-08-18)
+
+
+### Features
+
+* **xml:** add baseDir option to DisassembleXMLFileHandler ([#61](https://github.com/mcarvin8/config-disassembler-node/issues/61)) ([aa722ac](https://github.com/mcarvin8/config-disassembler-node/commit/aa722ac98f39f543525a292fbd092d2197fb977e))
+
 ## [3.2.0](https://github.com/mcarvin8/config-disassembler-node/compare/v3.1.0...v3.2.0) (2026-08-12)
 
 
