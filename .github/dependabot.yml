@@ -3,12 +3,9 @@ updates:
   - package-ecosystem: "cargo"
     directory: "/"
     schedule:
-      interval: "weekly"
-      day: "monday"
+      interval: "monthly"
     commit-message:
       prefix: "feat(rust)"
-    cooldown:
-      default-days: 0
     groups:
       config-disassembler:
         patterns:
