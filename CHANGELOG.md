@@ -5,6 +5,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.4.0](https://github.com/mcarvin8/config-disassembler-node/compare/v3.3.0...v3.4.0) (2026-09-01)
+
+
+### Features
+
+* **rust:** bump config disassembler rust crate to 0.10.1 ([#66](https://github.com/mcarvin8/config-disassembler-node/issues/66)) ([63aa936](https://github.com/mcarvin8/config-disassembler-node/commit/63aa93666c1c5660667f2a7da0edb36d624a9eaf))
+* **rust:** bump the cargo group across 1 directory with 2 updates ([#63](https://github.com/mcarvin8/config-disassembler-node/issues/63)) ([49afc59](https://github.com/mcarvin8/config-disassembler-node/commit/49afc590841d051b3df90ae65491c415ba00199b))
+
 ## [3.3.0](https://github.com/mcarvin8/config-disassembler-node/compare/v3.2.0...v3.3.0) (2026-08-18)
 
 
