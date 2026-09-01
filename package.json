@@ -36,6 +36,7 @@
     "artifacts": "napi artifacts",
     "build": "napi build --platform --release",
     "build:debug": "napi build --platform",
+    "lint:engine": "ls-engines --no-current --no-dev --mode=virtual",
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
     "prepare": "husky"
@@ -46,6 +47,7 @@
     "@napi-rs/cli": "3.8.6",
     "@types/node": "26.2.0",
     "husky": "9.1.7",
+    "ls-engines": "0.10.1",
     "typescript": "7.0.2",
     "vitest": "4.1.11"
   },
