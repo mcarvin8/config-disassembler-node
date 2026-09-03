@@ -5,6 +5,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.4.1](https://github.com/mcarvin8/config-disassembler-node/compare/v3.4.0...v3.4.1) (2026-09-03)
+
+
+### Bug Fixes
+
+* **rust:** bump config-disassembler to 0.10.2 ([#68](https://github.com/mcarvin8/config-disassembler-node/issues/68)) ([4c087f3](https://github.com/mcarvin8/config-disassembler-node/commit/4c087f3fa574f111d29a60a9a964ae6b8d669f91))
+
 ## [3.4.0](https://github.com/mcarvin8/config-disassembler-node/compare/v3.3.0...v3.4.0) (2026-09-01)
 
 
