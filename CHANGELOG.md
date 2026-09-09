@@ -5,6 +5,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.4.7](https://github.com/mcarvin8/config-disassembler-node/compare/v3.4.6...v3.4.7) (2026-09-09)
+
+
+### Bug Fixes
+
+* **rust:** add XML round-trip fuzz harness, bump config-disassembler to 0.10.8 ([#82](https://github.com/mcarvin8/config-disassembler-node/issues/82)) ([2850d3f](https://github.com/mcarvin8/config-disassembler-node/commit/2850d3ffafef32a0f6cb5137a516d03902d9c28b))
+
 ## [3.4.6](https://github.com/mcarvin8/config-disassembler-node/compare/v3.4.5...v3.4.6) (2026-09-09)
 
 
