@@ -5,6 +5,61 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [4.0.0](https://github.com/mcarvin8/config-disassembler-node/compare/v3.4.4...v4.0.0) (2026-09-09)
+
+
+### ⚠ BREAKING CHANGES
+
+* **xml:** disassemble/reassemble/parseXml/verifyXmlRoundtrip now return Promises instead of resolving synchronously. Any caller that invoked these without awaiting the result must add await, or it will no longer wait for the file to actually be processed.
+* switch native bindings from Neon to napi-rs ([#19](https://github.com/mcarvin8/config-disassembler-node/issues/19))
+
+### Features
+
+* accept multiLevel as string or string[] ([#2](https://github.com/mcarvin8/config-disassembler-node/issues/2)) ([c9772f3](https://github.com/mcarvin8/config-disassembler-node/commit/c9772f368a708fa0220118209cfe6a661aa82114))
+* add Alpine / musl libc support (linux-x64-musl, linux-arm64-musl) ([#25](https://github.com/mcarvin8/config-disassembler-node/issues/25)) ([9f51662](https://github.com/mcarvin8/config-disassembler-node/commit/9f51662e589123df03794e1d79a1e9a967af8e08))
+* add native binary support for win32-arm64 ([#17](https://github.com/mcarvin8/config-disassembler-node/issues/17)) ([97efd0f](https://github.com/mcarvin8/config-disassembler-node/commit/97efd0f47fec548da551efd1df6b6afe97825416))
+* add sidecar elements support for XML disassemble/reassemble ([#39](https://github.com/mcarvin8/config-disassembler-node/issues/39)) ([e3e777b](https://github.com/mcarvin8/config-disassembler-node/commit/e3e777b52097c40e9333f73a3bb70276952e52ed))
+* **deps:** bump config-disassembler to 0.4.5 (compound unique-id keys) ([#10](https://github.com/mcarvin8/config-disassembler-node/issues/10)) ([43678ef](https://github.com/mcarvin8/config-disassembler-node/commit/43678efaa435cd4accf62ca4b94e25c0c3f2525a))
+* **deps:** bump config-disassembler to 0.5.0 (sanitize + collision detection) ([#13](https://github.com/mcarvin8/config-disassembler-node/issues/13)) ([eb52fde](https://github.com/mcarvin8/config-disassembler-node/commit/eb52fde5725ec819d64170f0502e22eef118f87f))
+* init commit ([b3e509b](https://github.com/mcarvin8/config-disassembler-node/commit/b3e509b19dad6c3550541715b66bce6eb7ae470e))
+* **rust:** bump config disassembler rust crate to 0.10.1 ([#66](https://github.com/mcarvin8/config-disassembler-node/issues/66)) ([63aa936](https://github.com/mcarvin8/config-disassembler-node/commit/63aa93666c1c5660667f2a7da0edb36d624a9eaf))
+* **rust:** bump config-disassembler from 0.5.0 to 0.5.1 ([#15](https://github.com/mcarvin8/config-disassembler-node/issues/15)) ([77eb94d](https://github.com/mcarvin8/config-disassembler-node/commit/77eb94d142db1e801753e7527b8c51bde2d6ad75))
+* **rust:** bump config-disassembler from 0.5.1 to 0.5.3 ([#29](https://github.com/mcarvin8/config-disassembler-node/issues/29)) ([37a55cd](https://github.com/mcarvin8/config-disassembler-node/commit/37a55cdcf343a7b1eec23a77972f54fe024fb504))
+* **rust:** bump config-disassembler from 0.5.3 to 0.5.4 ([#35](https://github.com/mcarvin8/config-disassembler-node/issues/35)) ([b69f4cd](https://github.com/mcarvin8/config-disassembler-node/commit/b69f4cd6f0e97909de5c3a6240d5005441da4a0f))
+* **rust:** bump config-disassembler from 0.5.4 to 0.6.0 ([#37](https://github.com/mcarvin8/config-disassembler-node/issues/37)) ([1de8d50](https://github.com/mcarvin8/config-disassembler-node/commit/1de8d50243d7985dcc221641a8f214684b1f1aba))
+* **rust:** bump config-disassembler from 0.8.0 to 0.8.1 ([#43](https://github.com/mcarvin8/config-disassembler-node/issues/43)) ([24b045e](https://github.com/mcarvin8/config-disassembler-node/commit/24b045eb93f27a4c09193c04933c53040f784e39))
+* **rust:** bump config-disassembler from 0.9.2 to 0.9.3 ([#54](https://github.com/mcarvin8/config-disassembler-node/issues/54)) ([f5d4331](https://github.com/mcarvin8/config-disassembler-node/commit/f5d4331ba22c16ba1eaba838bff67d535f00c985))
+* **rust:** bump config-disassembler from 0.9.3 to 0.9.4 ([#56](https://github.com/mcarvin8/config-disassembler-node/issues/56)) ([8c4afa2](https://github.com/mcarvin8/config-disassembler-node/commit/8c4afa2b944015bff048208beeeac0303301cf0d))
+* **rust:** bump rust crate to preserve original format of sidecar content through round-trip ([#41](https://github.com/mcarvin8/config-disassembler-node/issues/41)) ([9665fd9](https://github.com/mcarvin8/config-disassembler-node/commit/9665fd91005b747ebddd18696281eaea65d769fd))
+* **rust:** bump the cargo group across 1 directory with 2 updates ([#63](https://github.com/mcarvin8/config-disassembler-node/issues/63)) ([49afc59](https://github.com/mcarvin8/config-disassembler-node/commit/49afc590841d051b3df90ae65491c415ba00199b))
+* **rust:** bump the cargo group with 7 updates ([#60](https://github.com/mcarvin8/config-disassembler-node/issues/60)) ([13a6c63](https://github.com/mcarvin8/config-disassembler-node/commit/13a6c6304ceb17e616d3d0512af321769e346120))
+* switch native bindings from Neon to napi-rs ([#19](https://github.com/mcarvin8/config-disassembler-node/issues/19)) ([a7233cb](https://github.com/mcarvin8/config-disassembler-node/commit/a7233cbc4a752d1dfcb976d3e377057362c8ce8c))
+* **xml:** add baseDir option to DisassembleXMLFileHandler ([#61](https://github.com/mcarvin8/config-disassembler-node/issues/61)) ([aa722ac](https://github.com/mcarvin8/config-disassembler-node/commit/aa722ac98f39f543525a292fbd092d2197fb977e))
+* **xml:** add verifyXmlRoundtrip binding ([#45](https://github.com/mcarvin8/config-disassembler-node/issues/45)) ([15f38f9](https://github.com/mcarvin8/config-disassembler-node/commit/15f38f9c23fa6748ed8c5a1c16026fc03deff7a5))
+* **xml:** expose disassemble/reassemble/parseXml/verifyXmlRoundtrip as true async ([#47](https://github.com/mcarvin8/config-disassembler-node/issues/47)) ([0bb779a](https://github.com/mcarvin8/config-disassembler-node/commit/0bb779adef8f2a67b0ff6bea8815e632365c97bf))
+* **xml:** expose parse_xml to Node.js bindings ([#31](https://github.com/mcarvin8/config-disassembler-node/issues/31)) ([62b613e](https://github.com/mcarvin8/config-disassembler-node/commit/62b613e9a09bd533e3e7dff7db8c0ca60f1009f4))
+
+
+### Bug Fixes
+
+* **deps:** bump config-disassembler to 0.4.3 ([#6](https://github.com/mcarvin8/config-disassembler-node/issues/6)) ([ead252a](https://github.com/mcarvin8/config-disassembler-node/commit/ead252a27c2fccfec918f563358290039f918976))
+* **deps:** bump config-disassembler to 0.4.4 ([#8](https://github.com/mcarvin8/config-disassembler-node/issues/8)) ([95e74ea](https://github.com/mcarvin8/config-disassembler-node/commit/95e74ea80552a315fa1ed09b707d953ea5d550d2))
+* reassemble nested multi-level segments without stripping wrapper elements ([#4](https://github.com/mcarvin8/config-disassembler-node/issues/4)) ([31ca8ab](https://github.com/mcarvin8/config-disassembler-node/commit/31ca8abdb05b71975bd69bbb14ec0d5c4409b4e8))
+* **release:** publish napi-generated index.js / index.d.ts with main package ([ae20899](https://github.com/mcarvin8/config-disassembler-node/commit/ae20899097f36edf3c0d858b9abad271b75a451e))
+* **release:** trigger release for trusted publishing ([707af83](https://github.com/mcarvin8/config-disassembler-node/commit/707af83c41791e4c41b752a1e3bdf01d0e0f149f))
+* **release:** use NPM_TOKEN to bootstrap per-platform package publish ([bf03e44](https://github.com/mcarvin8/config-disassembler-node/commit/bf03e445351bf866e3483a828f068fb85f3750d0))
+* **rust:** bump config-disassembler to 0.10.2 ([#68](https://github.com/mcarvin8/config-disassembler-node/issues/68)) ([4c087f3](https://github.com/mcarvin8/config-disassembler-node/commit/4c087f3fa574f111d29a60a9a964ae6b8d669f91))
+* **rust:** bump config-disassembler to 0.10.3 ([#70](https://github.com/mcarvin8/config-disassembler-node/issues/70)) ([997b558](https://github.com/mcarvin8/config-disassembler-node/commit/997b558aaaef784efd8407245a7172721822eebe))
+* **rust:** bump config-disassembler to 0.10.4 ([#72](https://github.com/mcarvin8/config-disassembler-node/issues/72)) ([d8c10c1](https://github.com/mcarvin8/config-disassembler-node/commit/d8c10c152688475bdb8a8fb3914c1142a546fbca))
+* **rust:** bump config-disassembler to 0.10.5 ([#74](https://github.com/mcarvin8/config-disassembler-node/issues/74)) ([381d055](https://github.com/mcarvin8/config-disassembler-node/commit/381d055fe19bcf670015033a2aaa5a8e4bad35f2))
+* trigger release due to GitHub network failures ([710b785](https://github.com/mcarvin8/config-disassembler-node/commit/710b785ec5680d0799fa64cd2b53aa0bf14c599b))
+
+
+### Performance Improvements
+
+* bump config-disassembler to 0.9.1 ([#49](https://github.com/mcarvin8/config-disassembler-node/issues/49)) ([0cbed29](https://github.com/mcarvin8/config-disassembler-node/commit/0cbed29031621090ae4d2de59b280b568f26ab7b))
+* bump config-disassembler to 0.9.2 ([#51](https://github.com/mcarvin8/config-disassembler-node/issues/51)) ([2c0f432](https://github.com/mcarvin8/config-disassembler-node/commit/2c0f43264cfdcd19d81c39e0bd87e04741b26ef4))
+
 ## [3.4.4](https://github.com/mcarvin8/config-disassembler-node/compare/v3.4.3...v3.4.4) (2026-09-09)
 
 
