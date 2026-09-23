@@ -18,6 +18,8 @@ const UNIQUE_ID_ELEMENTS =
   "apexClass,name,object,field,layout,actionName,targetReference,assignToReference,choiceText,promptText";
 
 async function main() {
+  const { version } = require("config-disassembler/package.json");
+  console.log("[smoke] config-disassembler version:", version);
   console.log("[smoke] Platform:", process.platform, process.arch);
   console.log("[smoke] Node:", process.version);
 
