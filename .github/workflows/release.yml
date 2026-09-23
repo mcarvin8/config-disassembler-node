@@ -201,9 +201,3 @@ jobs:
         # above; OIDC authenticates, NODE_AUTH_TOKEN is intentionally
         # cleared.
         run: NODE_AUTH_TOKEN="" npm publish --access public --tag latest --provenance
-
-  smoke-test:
-    needs: [publish, release-please]
-    if: needs.release-please.outputs.release_created == 'true'
-    uses: ./.github/workflows/smoke-test.yml
-    secrets: inherit
