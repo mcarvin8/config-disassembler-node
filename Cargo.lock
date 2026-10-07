@@ -112,9 +112,9 @@ checksum = "1d07550c9036bf2ae0c684c4297d503f838287c83c53686d05370d0e139ae570"
 
 [[package]]
 name = "config-disassembler"
-version = "0.10.8"
+version = "0.10.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0494bb7f3bfd96ee8a24f28826690ec638a0733ab6e9830fa3c41af04e6089c3"
+checksum = "874f61578ae8fb5da846b0c2928591adb9d2cb01442bb816fb82cd622410d5e3"
 dependencies = [
  "anyhow",
  "configparser",
@@ -479,9 +479,9 @@ dependencies = [
 
 [[package]]
 name = "jsonc-parser"
-version = "0.33.1"
+version = "0.34.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a0560e3f9a9a03ea6b6e90b41138c5db9e21526c99eb192c1a26c68176593285"
+checksum = "0ecded084f9b9a718d39668a42657c32253663d1f6afb3fbb9134f0305f73f48"
 dependencies = [
  "serde",
 ]
