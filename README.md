@@ -4,9 +4,9 @@
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](https://raw.githubusercontent.com/mcarvin8/config-disassembler-node/main/LICENSE.md)
 [![Downloads/week](https://img.shields.io/npm/dw/config-disassembler.svg)](https://npmjs.org/package/config-disassembler)
 
-Node.js bindings for the Rust [`config-disassembler`](https://crates.io/crates/config-disassembler) crate via `napi-rs`. Use it to disassemble large configuration files into smaller, version-control–friendly files and then, reassemble the original file contents.
+Node.js bindings for the Rust [`config-disassembler`](https://crates.io/crates/config-disassembler) crate via `napi-rs`. Use it to disassemble large configuration files into smaller, version-control–friendly files and reassemble them back into their original form.
 
-For full option documentation and behavior details, see the Rust crate [documentation](https://github.com/mcarvin8/config-disassembler).
+For full option documentation and behavior details, see the primary [config-disassembler repository](https://github.com/mcarvin8/config-disassembler).
 
 ---
 
