@@ -4,9 +4,7 @@
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](https://raw.githubusercontent.com/mcarvin8/config-disassembler-node/main/LICENSE.md)
 [![Downloads/week](https://img.shields.io/npm/dw/config-disassembler.svg)](https://npmjs.org/package/config-disassembler)
 
-Node.js bindings for the Rust [`config-disassembler`](https://crates.io/crates/config-disassembler) crate via napi-rs.
-
-Use it to disassemble large configuration files into smaller, version-control–friendly files and reassemble them later.
+Node.js bindings for the Rust [`config-disassembler`](https://crates.io/crates/config-disassembler) crate via `napi-rs`. Use it to disassemble large configuration files into smaller, version-control–friendly files and then, reassemble the original file contents.
 
 For full option documentation and behavior details, see the Rust crate [documentation](https://github.com/mcarvin8/config-disassembler).
 
@@ -98,7 +96,7 @@ If your platform or architecture isn't listed, please open an [issue](https://gi
 
 ## Use Case
 
-For a use-case using the XML API, see [sf-decomposer](https://github.com/mcarvin8/sf-decomposer).
+For an XML API use case, see the Salesforce CLI plugin [sf-decomposer](https://github.com/mcarvin8/sf-decomposer).
 
 ---
 
