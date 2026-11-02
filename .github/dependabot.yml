@@ -5,7 +5,7 @@ updates:
     schedule:
       interval: "monthly"
     commit-message:
-      prefix: "feat(rust)"
+      prefix: "build(rust)"
     groups:
       config-disassembler:
         patterns:
@@ -21,7 +21,7 @@ updates:
     schedule:
       interval: "monthly"
     commit-message:
-      prefix: "build"
+      prefix: "build(github-actions)"
     groups:
       github-actions:
         patterns:
@@ -32,7 +32,7 @@ updates:
     schedule:
       interval: "monthly"
     commit-message:
-      prefix: "chore(dev-deps)"
+      prefix: "build(npm)"
     groups:
       dev-dependencies:
         dependency-type: "development"
