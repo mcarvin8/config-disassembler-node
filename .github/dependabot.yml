@@ -7,7 +7,7 @@ updates:
     commit-message:
       prefix: "build(rust)"
     cooldown:
-      default-days: 1
+      default-days: 0
     groups:
       config-disassembler:
         patterns:
