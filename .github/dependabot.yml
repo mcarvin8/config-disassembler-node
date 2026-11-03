@@ -17,7 +17,6 @@ updates:
           - "*"
         exclude-patterns:
           - "config-disassembler"
-
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
@@ -28,7 +27,6 @@ updates:
       github-actions:
         patterns:
           - "*"
-
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
