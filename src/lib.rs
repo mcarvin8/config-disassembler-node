@@ -21,6 +21,14 @@
 use std::path::PathBuf;
 use std::str::FromStr;
 
+/// mimalloc for every Rust allocation in this addon, on Linux glibc only (see the
+/// target-specific dependency in Cargo.toml for why and why not elsewhere).
+/// `#[global_allocator]` in a cdylib governs the addon's own Rust code -- the
+/// crate's parse trees, shards and buffers -- not Node/V8's allocations.
+#[cfg(all(target_os = "linux", target_env = "gnu"))]
+#[global_allocator]
+static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
+
 use config_disassembler::disassemble::{disassemble as cd_disassemble, DisassembleOptions};
 use config_disassembler::format::Format;
 use config_disassembler::reassemble::{reassemble as cd_reassemble, ReassembleOptions};
