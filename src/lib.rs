@@ -27,7 +27,7 @@ use std::str::FromStr;
 /// crate's parse trees, shards and buffers -- not Node/V8's allocations.
 #[cfg(all(target_os = "linux", target_env = "gnu"))]
 #[global_allocator]
-static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
+static GLOBAL: mimalloc_safe::MiMalloc = mimalloc_safe::MiMalloc;
 
 use config_disassembler::disassemble::{disassemble as cd_disassemble, DisassembleOptions};
 use config_disassembler::format::Format;
