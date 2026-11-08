@@ -1,0 +1,170 @@
+name: Memory A/B
+
+# Same-runner A/B of this addon: builds the PR (head) and its base on ONE runner
+# and runs sf-decomposer's crate workload through each build's JS API
+# (scripts/memory-ab.cjs), alternating which side goes first, with a fresh fixture
+# copy and a dropped page cache before every run. Reports per-phase medians of
+# each operation's own peak RSS, wall time and CPU, and how many rounds head won.
+#
+# Exists for allocator / native-memory changes, whose effect only shows inside a
+# Node process (V8, libuv and the napi runtime add threads), so the crate's own
+# pure-Rust A/B can't measure them.
+#
+# Also cross-compiles aarch64-unknown-linux-gnu with the release toolchain
+# (napi-rs cross sysroot): normal PR CI only builds each host's native target,
+# and native-code dependency changes would otherwise first be compiled for the
+# cross targets at release time.
+
+on:
+  pull_request:
+    paths:
+      - Cargo.toml
+      - Cargo.lock
+      - src/**
+      - scripts/memory-ab.cjs
+      - .github/workflows/memory-ab.yml
+  workflow_dispatch:
+    inputs:
+      compare_ref:
+        description: Base ref to compare the dispatched ref against
+        type: string
+        default: main
+      profile:
+        description: sf-decomposer fixture profile
+        type: choice
+        default: large
+        options: [small, medium, large, xlarge, manyfiles]
+      rounds:
+        type: string
+        default: '6'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: memory-ab-${{ github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+env:
+  BASE_REF: ${{ inputs.compare_ref || github.base_ref || 'main' }}
+  PROFILE: ${{ inputs.profile || 'large' }}
+  ROUNDS: ${{ inputs.rounds || '6' }}
+  CARGO_TERM_COLOR: never
+
+jobs:
+  ab:
+    name: Same-runner A/B (${{ inputs.profile || 'large' }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Checkout head
+        uses: actions/checkout@v7
+        with:
+          path: head
+          persist-credentials: false
+
+      - name: Checkout base
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ env.BASE_REF }}
+          path: base
+          persist-credentials: false
+
+      - name: Checkout sf-decomposer (fixture generator)
+        uses: actions/checkout@v7
+        with:
+          repository: mcarvin8/sf-decomposer
+          path: sf-decomposer
+          persist-credentials: false
+
+      - name: Setup Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: lts/*
+
+      - name: Setup Rust (same action as release.yml)
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Build both addons (release, host target)
+        run: |
+          for side in base head; do
+            (cd "$side" && npm ci --no-fund --no-audit && npm run build)
+          done
+
+      - name: Generate fixtures
+        run: npx --yes tsx scripts/gen-perf-fixtures.ts --profile "$PROFILE" --out "$RUNNER_TEMP/fixtures"
+        working-directory: sf-decomposer
+
+      - name: Alternating rounds on one runner
+        run: |
+          OUT="$RUNNER_TEMP/ab"; mkdir -p "$OUT"
+          TSV="$OUT/ab.tsv"
+          printf 'round\tside\top\twall_s\tuser_s\tsys_s\tpeak_rss_mb\n' > "$TSV"
+          # The probe script comes from head for both sides, so only the addon differs.
+          PROBE="$GITHUB_WORKSPACE/head/scripts/memory-ab.cjs"
+          run_one() { # side round
+            local side=$1 round=$2 work="$RUNNER_TEMP/work-$1"
+            rm -rf "$work"; cp -r "$RUNNER_TEMP/fixtures" "$work"
+            sync; echo 3 | sudo tee /proc/sys/vm/drop_caches >/dev/null
+            for op in decompose recompose; do
+              json=$(node "$PROBE" "$GITHUB_WORKSPACE/$side" "$op" "$work")
+              echo "$side round=$round $json"
+              python3 -c 'import json,sys; d=json.loads(sys.argv[1]); print("\t".join(map(str,[sys.argv[2],sys.argv[3],d["op"],d["wall_s"],d["user_s"],d["sys_s"],d["peak_rss_mb"]])))' \
+                "$json" "$round" "$side" >> "$TSV"
+            done
+          }
+          run_one base 0; run_one head 0
+          for r in $(seq 1 "$ROUNDS"); do
+            if [ $((r % 2)) -eq 1 ]; then run_one base "$r"; run_one head "$r"; else run_one head "$r"; run_one base "$r"; fi
+          done
+          python3 - "$TSV" > "$OUT/summary.md" <<'PY'
+          import csv, os, statistics, sys
+          rows = [r for r in csv.DictReader(open(sys.argv[1]), delimiter='\t') if r['round'] != '0']
+          print(f"## Memory A/B: `{os.environ['BASE_REF']}` (base) vs this ref (head)\n")
+          print(f"profile={os.environ['PROFILE']}, {os.environ['ROUNDS']} alternating rounds after a warm-up; medians. "
+                "peak_rss_mb is each operation's own peak (VmHWM reset just before it).\n")
+          print('| op | metric | base | head | change | head better in |')
+          print('|---|---|---:|---:|---:|---:|')
+          for op in ('decompose', 'recompose'):
+              for metric in ('peak_rss_mb', 'wall_s', 'user_s', 'sys_s'):
+                  base = {r['round']: float(r[metric]) for r in rows if r['side'] == 'base' and r['op'] == op}
+                  head = {r['round']: float(r[metric]) for r in rows if r['side'] == 'head' and r['op'] == op}
+                  b, h = statistics.median(base.values()), statistics.median(head.values())
+                  wins = sum(1 for k in base if head[k] < base[k])
+                  change = f'{(h / b - 1) * 100:+.1f}%' if b else 'n/a'
+                  print(f'| {op} | {metric} | {b:.2f} | {h:.2f} | {change} | {wins}/{len(base)} |')
+          PY
+          cat "$OUT/summary.md" | tee -a "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload A/B results
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: memory-ab-${{ env.PROFILE }}
+          path: ${{ runner.temp }}/ab/
+          retention-days: 30
+          if-no-files-found: warn
+
+  cross-check:
+    name: Cross-compile aarch64-unknown-linux-gnu
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: lts/*
+
+      - name: Setup Rust (same action as release.yml)
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-unknown-linux-gnu
+
+      - name: Build (same command as release.yml)
+        run: |
+          npm ci --no-fund --no-audit
+          npm run build -- --target aarch64-unknown-linux-gnu --use-napi-cross
+          ls -la *.node
