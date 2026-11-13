@@ -88,7 +88,7 @@ This package ships with prebuilt native binaries as platform-specific optional n
 | ----------- | ------------------------------------ |
 | **macOS**   | x64 (Intel), arm64 (Apple Silicon)   |
 | **Linux**   | x64 (gnu + musl), arm64 (gnu + musl) |
-| **Windows** | x64, arm64, ia32                     |
+| **Windows** | x64, arm64                           |
 
 If your platform or architecture isn't listed, please open an [issue](https://github.com/mcarvin8/config-disassembler-node/issues).
 
