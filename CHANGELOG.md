@@ -5,6 +5,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [4.0.0](https://github.com/mcarvin8/config-disassembler-node/compare/v3.6.9...v4.0.0) (2026-11-13)
+
+
+### ⚠ BREAKING CHANGES
+
+* drop 32-bit Windows (i686-pc-windows-msvc) support ([#112](https://github.com/mcarvin8/config-disassembler-node/issues/112))
+
+### Features
+
+* drop 32-bit Windows (i686-pc-windows-msvc) support ([#112](https://github.com/mcarvin8/config-disassembler-node/issues/112)) ([0d77926](https://github.com/mcarvin8/config-disassembler-node/commit/0d77926d0c9a8362fbe7d67d48e1cbd4ce76215b))
+
+
+### Bug Fixes
+
+* bump config-disassembler crate to 0.11.12 ([#114](https://github.com/mcarvin8/config-disassembler-node/issues/114)) ([3a7ef94](https://github.com/mcarvin8/config-disassembler-node/commit/3a7ef947487fd08ec5602ed93952a8e7521ce428))
+
 ## [3.6.9](https://github.com/mcarvin8/config-disassembler-node/compare/v3.6.8...v3.6.9) (2026-11-13)
 
 
