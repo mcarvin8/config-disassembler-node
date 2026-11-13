@@ -72,9 +72,6 @@ jobs:
           - host: windows-latest
             target: aarch64-pc-windows-msvc
             build: npm run build -- --target aarch64-pc-windows-msvc
-          - host: windows-latest
-            target: i686-pc-windows-msvc
-            build: npm run build -- --target i686-pc-windows-msvc
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -190,7 +187,7 @@ jobs:
         run: npm config set provenance true
 
       - name: Publish per-platform packages and update optionalDependencies
-        # All nine per-platform packages now have npm trusted publishing
+        # All eight per-platform packages now have npm trusted publishing
         # configured, so OIDC alone authenticates and NODE_AUTH_TOKEN is
         # cleared to avoid setup-node's default GITHUB_TOKEN leaking
         # in and breaking the provenance flow.
