@@ -73,12 +73,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "anyhow"
-version = "1.0.102"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7f202df86484c868dbad7eaa557ef785d5c66295e41b460ef922eca0723b842c"
-
-[[package]]
 name = "arraydeque"
 version = "0.5.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -141,13 +135,11 @@ checksum = "1d07550c9036bf2ae0c684c4297d503f838287c83c53686d05370d0e139ae570"
 
 [[package]]
 name = "config-disassembler"
-version = "0.11.10"
+version = "0.11.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6e4ba2f491675893ad935158546c9d09da12a9462cf62ebd85364b63356a45a3"
+checksum = "d7415a5438129ee0cbd2d84d953fcb96d83a5b4fdcfcaf8f6ae680e222b0dac0"
 dependencies = [
- "anyhow",
  "configparser",
- "env_logger",
  "ignore",
  "indexmap",
  "json5",
