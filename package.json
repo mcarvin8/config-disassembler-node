@@ -1,7 +1,7 @@
 {
   "name": "config-disassembler",
   "version": "4.1.0",
-  "description": "Node.js bindings for the Rust config-disassembler crate.",
+  "description": "Node.js bindings for the Rust config-disassembler crate (XML disassemble/reassemble).",
   "author": "Matt Carvin",
   "license": "MIT",
   "main": "index.js",
@@ -65,13 +65,6 @@
     "disassembler",
     "reassemble",
     "xml",
-    "json",
-    "json5",
-    "jsonc",
-    "yaml",
-    "toon",
-    "toml",
-    "ini",
     "salesforce",
     "rust",
     "napi-rs"

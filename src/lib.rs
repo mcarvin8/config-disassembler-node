@@ -1,29 +1,16 @@
 //! napi-rs bindings for the `config-disassembler` crate.
 //!
-//! Exposes two families of operations to Node.js as classes whose names
-//! and method shapes are preserved across the previous Neon API:
-//!
-//! * XML disassemble/reassemble via [`DisassembleXMLFileHandler`] and
-//!   [`ReassembleXMLFileHandler`] – ports of the `xml-disassembler` API
-//!   now living under [`config_disassembler::xml`]. [`verify_xml_roundtrip`]
-//!   exposes the crate's round-trip invariant check for dry-run/CI use.
-//! * Value-model disassemble/reassemble via
-//!   [`DisassembleConfigFileHandler`] and
-//!   [`ReassembleConfigFileHandler`] – JSON, JSON5, JSONC, YAML, TOON,
-//!   TOML, and INI support exposed through
-//!   [`config_disassembler::disassemble`] and
-//!   [`config_disassembler::reassemble`].
+//! Exposes XML disassemble/reassemble to Node.js via
+//! [`DisassembleXMLFileHandler`] and [`ReassembleXMLFileHandler`] – ports
+//! of the `xml-disassembler` API now living under
+//! [`config_disassembler::xml`]. [`verify_xml_roundtrip`] exposes the
+//! crate's round-trip invariant check for dry-run/CI use. Class names and
+//! method shapes are preserved from the previous Neon API.
 //!
 //! `napi-derive` auto-converts `snake_case` Rust fields to `camelCase`
 //! TypeScript fields, so the JS-facing option object keys remain the
 //! same as the previous Neon implementation.
 
-use std::path::PathBuf;
-use std::str::FromStr;
-
-use config_disassembler::disassemble::{disassemble as cd_disassemble, DisassembleOptions};
-use config_disassembler::format::Format;
-use config_disassembler::reassemble::{reassemble as cd_reassemble, ReassembleOptions};
 use config_disassembler::xml::{
     cli::{parse_multi_level_spec, parse_multi_level_specs, parse_sidecar_specs},
     parse_xml as xml_parse_xml, verify_roundtrip, DecomposeRule, DisassembleXmlFileHandler,
@@ -38,10 +25,6 @@ use napi_derive::napi;
 #[napi_derive::module_init]
 fn init() {
     let _ = env_logger::try_init();
-}
-
-fn parse_format(raw: &str) -> napi::Result<Format> {
-    Format::from_str(raw).map_err(|e| Error::from_reason(format!("invalid format `{raw}`: {e}")))
 }
 
 fn flatten_string_or_array(value: Option<Either<String, Vec<String>>>) -> Vec<String> {
@@ -357,114 +340,5 @@ pub async fn verify_xml_roundtrip(opts: VerifyXmlOptions) -> napi::Result<Verify
             "verifyXmlRoundtrip error: {}",
             e
         ))),
-    }
-}
-
-// ============================================================================
-// Value-model bindings (JSON / JSON5 / JSONC / YAML / TOON / TOML / INI)
-// ============================================================================
-
-/// Options accepted by [`DisassembleConfigFileHandler::disassemble`].
-#[napi(object)]
-pub struct DisassembleConfigOptions {
-    pub input: String,
-    pub input_format: Option<String>,
-    pub output_format: Option<String>,
-    pub output_dir: Option<String>,
-    pub unique_id: Option<String>,
-    pub pre_purge: Option<bool>,
-    pub post_purge: Option<bool>,
-    pub ignore_path: Option<String>,
-}
-
-/// Options accepted by [`ReassembleConfigFileHandler::reassemble`].
-#[napi(object)]
-pub struct ReassembleConfigOptions {
-    pub input_dir: String,
-    pub output: Option<String>,
-    pub output_format: Option<String>,
-    pub post_purge: Option<bool>,
-}
-
-/// Disassembler for value-model config files (JSON / JSON5 / JSONC /
-/// YAML / TOON / TOML / INI). `input` may be a single file or a
-/// directory; when a directory is given, every matching file under it
-/// is disassembled in place using the optional `.cdignore` file (or
-/// whatever `ignorePath` points at) to filter the walk.
-///
-/// Returns the path of the directory containing the split files (for
-/// single-file input) or the input directory itself (for directory
-/// input).
-#[napi]
-pub struct DisassembleConfigFileHandler;
-
-#[napi]
-impl DisassembleConfigFileHandler {
-    #[napi(constructor)]
-    #[allow(clippy::new_without_default)]
-    pub fn new() -> Self {
-        Self
-    }
-
-    #[napi]
-    pub fn disassemble(&self, opts: DisassembleConfigOptions) -> napi::Result<String> {
-        let input_format = match opts.input_format {
-            Some(s) => Some(parse_format(&s)?),
-            None => None,
-        };
-        let output_format = match opts.output_format {
-            Some(s) => Some(parse_format(&s)?),
-            None => None,
-        };
-
-        let options = DisassembleOptions {
-            input: PathBuf::from(opts.input),
-            input_format,
-            output_dir: opts.output_dir.map(PathBuf::from),
-            output_format,
-            unique_id: opts.unique_id,
-            pre_purge: opts.pre_purge.unwrap_or(false),
-            post_purge: opts.post_purge.unwrap_or(false),
-            ignore_path: opts.ignore_path.map(PathBuf::from),
-        };
-
-        cd_disassemble(options)
-            .map(|p| p.to_string_lossy().into_owned())
-            .map_err(|e| Error::from_reason(format!("disassembleConfig error: {}", e)))
-    }
-}
-
-/// Reassembler for the value-model formats. Uses the
-/// `.config-disassembler.json` sidecar in `inputDir` to rebuild the
-/// original document deterministically. Returns the path of the
-/// reassembled file.
-#[napi]
-pub struct ReassembleConfigFileHandler;
-
-#[napi]
-impl ReassembleConfigFileHandler {
-    #[napi(constructor)]
-    #[allow(clippy::new_without_default)]
-    pub fn new() -> Self {
-        Self
-    }
-
-    #[napi]
-    pub fn reassemble(&self, opts: ReassembleConfigOptions) -> napi::Result<String> {
-        let output_format = match opts.output_format {
-            Some(s) => Some(parse_format(&s)?),
-            None => None,
-        };
-
-        let options = ReassembleOptions {
-            input_dir: PathBuf::from(opts.input_dir),
-            output: opts.output.map(PathBuf::from),
-            output_format,
-            post_purge: opts.post_purge.unwrap_or(false),
-        };
-
-        cd_reassemble(options)
-            .map(|p| p.to_string_lossy().into_owned())
-            .map_err(|e| Error::from_reason(format!("reassembleConfig error: {}", e)))
     }
 }
