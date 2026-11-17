@@ -4,7 +4,9 @@
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](https://raw.githubusercontent.com/mcarvin8/config-disassembler-node/main/LICENSE.md)
 [![Downloads/week](https://img.shields.io/npm/dw/config-disassembler.svg)](https://npmjs.org/package/config-disassembler)
 
-Node.js bindings for the Rust [`config-disassembler`](https://crates.io/crates/config-disassembler) crate via `napi-rs`. Use it to disassemble large configuration files into smaller, version-control–friendly files and reassemble them back into their original form.
+Node.js bindings for the Rust [`config-disassembler`](https://crates.io/crates/config-disassembler) crate via `napi-rs`. Use it to disassemble large XML files into smaller, version-control–friendly files and reassemble them back into their original form.
+
+> **Breaking change in 5.0.0:** the value-format API (`DisassembleConfigFileHandler` / `ReassembleConfigFileHandler` for JSON, JSON5, JSONC, YAML, TOON, TOML, and INI) was removed, following its removal from the Rust crate in 0.12.0. Only the XML API remains. Pin `config-disassembler@4` if you still need the value-format API. XML can still be split into JSON, JSON5, or YAML files with the `format` option.
 
 For full option documentation and behavior details, see the primary [config-disassembler repository](https://github.com/mcarvin8/config-disassembler).
 
@@ -57,29 +59,6 @@ if (result.status === "drift") {
 
 ---
 
-## Value-Format API
-
-```ts
-import {
-  DisassembleConfigFileHandler,
-  ReassembleConfigFileHandler,
-} from "config-disassembler";
-
-const outDir = new DisassembleConfigFileHandler().disassemble({
-  input: "config.json",
-  outputFormat: "yaml",
-  uniqueId: "id",
-});
-
-new ReassembleConfigFileHandler().reassemble({
-  inputDir: outDir,
-  output: "config.rebuilt.json",
-  outputFormat: "json",
-});
-```
-
----
-
 ## Supported Platforms
 
 This package ships with prebuilt native binaries as platform-specific optional npm packages — your package manager installs only the one matching your `os` / `cpu` / `libc`:
@@ -96,7 +75,7 @@ If your platform or architecture isn't listed, please open an [issue](https://gi
 
 ## Use Case
 
-For an XML API use case, see the Salesforce CLI plugin [sf-decomposer](https://github.com/mcarvin8/sf-decomposer).
+For a real-world use case, see the Salesforce CLI plugin [sf-decomposer](https://github.com/mcarvin8/sf-decomposer).
 
 ---
 
