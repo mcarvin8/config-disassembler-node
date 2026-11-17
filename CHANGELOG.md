@@ -5,6 +5,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [5.0.0](https://github.com/mcarvin8/config-disassembler-node/compare/v4.1.0...v5.0.0) (2026-11-17)
+
+
+### ⚠ BREAKING CHANGES
+
+* bump config-disassembler crate to 0.12.0 and drop value-format API ([#124](https://github.com/mcarvin8/config-disassembler-node/issues/124))
+
+### Features
+
+* bump config-disassembler crate to 0.12.0 and drop value-format API ([#124](https://github.com/mcarvin8/config-disassembler-node/issues/124)) ([1d8edeb](https://github.com/mcarvin8/config-disassembler-node/commit/1d8edeb22da321c3e8e332ca0d10db33b82d2994))
+
 ## [4.1.0](https://github.com/mcarvin8/config-disassembler-node/compare/v4.0.3...v4.1.0) (2026-11-17)
 
 
