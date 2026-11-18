@@ -5,6 +5,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [5.0.1](https://github.com/mcarvin8/config-disassembler-node/compare/v5.0.0...v5.0.1) (2026-11-18)
+
+
+### Bug Fixes
+
+* bump config-disassembler crate to 0.12.1 ([#126](https://github.com/mcarvin8/config-disassembler-node/issues/126)) ([3c54b62](https://github.com/mcarvin8/config-disassembler-node/commit/3c54b621e21d0c50698981362ae1124667b72018))
+* bump config-disassembler crate to 0.12.2 ([#128](https://github.com/mcarvin8/config-disassembler-node/issues/128)) ([0f412b1](https://github.com/mcarvin8/config-disassembler-node/commit/0f412b15c72a92fc58ad54c452ef4d87b06cc9c1))
+
 ## [5.0.0](https://github.com/mcarvin8/config-disassembler-node/compare/v4.1.0...v5.0.0) (2026-11-17)
 
 
