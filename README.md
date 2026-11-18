@@ -4,12 +4,11 @@
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](https://raw.githubusercontent.com/mcarvin8/config-disassembler-node/main/LICENSE.md)
 [![Downloads/week](https://img.shields.io/npm/dw/config-disassembler.svg)](https://npmjs.org/package/config-disassembler)
 
-Node.js bindings for the Rust [`config-disassembler`](https://crates.io/crates/config-disassembler) crate via `napi-rs`. Use it to disassemble large XML files into smaller, version-control–friendly files and reassemble them back into their original form.
+Node.js bindings for the Rust [`config-disassembler`](https://crates.io/crates/config-disassembler) crate via `napi-rs`. Use it to disassemble large XML files into smaller, version-control–friendly files and reassemble them back into their original form. For full option documentation and behavior details, see the [rust crate repository](https://github.com/mcarvin8/config-disassembler).
 
 > [!WARNING]
 > **Breaking change in 5.0.0:** the value-format API (`DisassembleConfigFileHandler` / `ReassembleConfigFileHandler` for JSON, JSON5, JSONC, YAML, TOON, TOML, and INI) was removed, following its removal from the Rust crate in 0.12.0. Only the XML API remains. Pin `config-disassembler@4` if you still need the value-format API. XML can still be split into JSON, JSON5, or YAML files with the `format` option.
 > If enough [issues](https://github.com/mcarvin8/config-disassembler-node/issues) are raised to re-add non-XML disassembly, it may be re-added in a future release.
-For full option documentation and behavior details, see the [rust crate repository](https://github.com/mcarvin8/config-disassembler).
 
 ---
 
