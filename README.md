@@ -8,7 +8,7 @@ Node.js bindings for the Rust [`config-disassembler`](https://crates.io/crates/c
 
 > [!WARNING]
 > **Breaking change in 5.0.0:** the value-format API (`DisassembleConfigFileHandler` / `ReassembleConfigFileHandler` for JSON, JSON5, JSONC, YAML, TOON, TOML, and INI) was removed, following its removal from the Rust crate in 0.12.0. Only the XML API remains. Pin `config-disassembler@4` if you still need the value-format API. XML can still be split into JSON, JSON5, or YAML files with the `format` option.
-
+> If enough [issues](https://github.com/mcarvin8/config-disassembler-node/issues) are raised to re-add non-XML disassembly, it may be re-added in a future release.
 For full option documentation and behavior details, see the [rust crate repository](https://github.com/mcarvin8/config-disassembler).
 
 ---
