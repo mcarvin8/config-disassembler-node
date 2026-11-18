@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ExternalServiceRegistration xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label>ExchangeRates</label>
+    <namedCredentialReference>RatesApi</namedCredentialReference>
+    <operations>
+        <active>true</active>
+        <name>getrates</name>
+    </operations>
+    <registrationProviderType>Custom</registrationProviderType>
+    <schema>{&quot;openapi&quot;:&quot;3.0.1&quot;,&quot;info&quot;:{&quot;title&quot;:&quot;ExchangeRates&quot;,&quot;version&quot;:&quot;1&quot;},&quot;x-default-rate&quot;:1.50,&quot;paths&quot;:{}}</schema>
+    <schemaType>OpenApi3</schemaType>
+    <status>Complete</status>
+</ExternalServiceRegistration>

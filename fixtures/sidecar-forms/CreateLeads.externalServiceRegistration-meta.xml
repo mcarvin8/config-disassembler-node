@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ExternalServiceRegistration xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Create Lead records in bulk.</description>
+    <label>CreateLeads</label>
+    <namedCredentialReference>SalesforceRestApi</namedCredentialReference>
+    <operations>
+        <active>true</active>
+        <name>createleads</name>
+    </operations>
+    <operations>
+        <active>false</active>
+        <name>getleadstatus</name>
+    </operations>
+    <registrationProviderType>Custom</registrationProviderType>
+    <schema>{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "CreateLeads",
+    "version": "1"
+  },
+  "paths": {
+    "/leads": {
+      "post": {
+        "operationId": "createleads",
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        }
+      }
+    }
+  }
+}</schema>
+    <schemaType>OpenApi3</schemaType>
+    <status>Complete</status>
+</ExternalServiceRegistration>
